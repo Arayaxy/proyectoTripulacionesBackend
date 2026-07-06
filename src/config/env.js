@@ -15,4 +15,5 @@ export const env = {
   port: parseInt(process.env.PORT, 10) || 3000,
   apiUrl: process.env.API_URL_BASE,
   corsOrigins: (process.env.CORS_ORIGINS || '').split(',').filter(Boolean),
+  jwtSecret: process.env.JWT_SECRET
 };

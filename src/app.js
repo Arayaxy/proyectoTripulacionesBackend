@@ -2,12 +2,20 @@ import { env } from './config/env.js';
 import express from 'express';
 import cors from 'cors';
 import { notFoundHandler, errorHandler } from './middlewares/index.js';
+import { initializeApp, cert } from 'firebase-admin/app';
+import serviceAccount from './config/firebaseServiceAccount.json' with { type: 'json' };
+import cookieParser from 'cookie-parser';
 import { healthRouter } from './routes/index.js';
+import { authRouter } from './routes/auth.route.js';
 
 if (env.mode === 'production')
   console.log(`\n⚡RUNNING IN PRODUCTION MODE ⚡`);
 else if (env.mode === 'development')
   console.log(`\n🚧 RUNNING IN DEVELOPMENT MODE 🚧`);
+
+initializeApp({
+  credential: cert(serviceAccount)
+});
 
 const app = express();
 
@@ -18,7 +26,8 @@ app.use(cors({
   'optionsSuccessStatus': 200,
   'credentials': true,
 }));
-
+ 
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -30,6 +39,7 @@ if (env.mode === 'development')
   });
 
 app.use(`${env.apiUrl}/health`, healthRouter);
+app.use(`${env.apiUrl}/auth`, authRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

@@ -1,3 +1,6 @@
+import jwt from 'jsonwebtoken';
+import env from '../config/env.js';
+
 // TODO: La parte de autenticación va a venir de Firebase,
 // hay que ver aplicar el middleware de autenticación acorde a ello.
 
@@ -26,3 +29,31 @@
 //     return res.status(403).json({ message: 'Permisos insuficientes' });
 //   next();
 // };
+
+
+export const verifyAdmin = (req, res, next) => {
+
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ ok: false, message: 'Accesso Porhibido, No token' });
+  }
+
+  try {
+
+    const decoded = jwt.verify(token, env.jwtSecret);
+    req.user = decoded;
+
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ ok: false, message: 'Accesso Porhibido, No Eres Admin' });
+    }
+
+    next();
+    
+  } catch (error) {
+    console.log(error)
+
+    return res.status(401).json({ ok: false, message: 'Token Invalido' });
+  }
+};
