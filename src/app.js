@@ -3,10 +3,10 @@ import express from 'express';
 import cors from 'cors';
 import { notFoundHandler, errorHandler } from './middlewares/index.js';
 import { initializeApp, cert } from 'firebase-admin/app';
-import serviceAccount from './config/firebaseServiceAccount.json' with { type: 'json' };
 import cookieParser from 'cookie-parser';
 import { healthRouter } from './routes/index.js';
 import { authRouter } from './routes/auth.route.js';
+import { serviceAccount } from './config/firebaseServiceAccount.js';
 
 if (env.mode === 'production')
   console.log(`\n⚡RUNNING IN PRODUCTION MODE ⚡`);
@@ -26,7 +26,7 @@ app.use(cors({
   'optionsSuccessStatus': 200,
   'credentials': true,
 }));
- 
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
