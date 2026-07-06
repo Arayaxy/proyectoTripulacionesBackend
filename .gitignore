@@ -1,3 +1,5 @@
 node_modules
 .env
+src/config/firebaseServiceAccount.json
+src/config/firebaseServiceAccount.7z
 
