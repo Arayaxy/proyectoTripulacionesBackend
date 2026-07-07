@@ -4,9 +4,13 @@ import cors from 'cors';
 import { notFoundHandler, errorHandler } from './middlewares/index.js';
 import { initializeApp, cert } from 'firebase-admin/app';
 import cookieParser from 'cookie-parser';
+<<<<<<< HEAD
 import { healthRouter } from './routes/index.js';
 import { authRouter } from './routes/auth.route.js';
 import { uploadRouter } from './routes/upload.route.js';
+=======
+import { healthRouter, authRouter, clienteRouter, eventoRouter } from './routes/index.js';
+>>>>>>> 427636bf07e82e51dfca0701fb4b459d045b1157
 import { serviceAccount } from './config/firebaseServiceAccount.js';
 
 
@@ -42,7 +46,12 @@ if (env.mode === 'development')
 
 app.use(`${env.apiUrl}/health`, healthRouter);
 app.use(`${env.apiUrl}/auth`, authRouter);
+<<<<<<< HEAD
 app.use(`${env.apiUrl}/upload`, uploadRouter);
+=======
+app.use(`${env.apiUrl}/clientes`, clienteRouter);
+app.use(`${env.apiUrl}/eventos`, eventoRouter);
+>>>>>>> 427636bf07e82e51dfca0701fb4b459d045b1157
 
 app.use(notFoundHandler);
 app.use(errorHandler);
