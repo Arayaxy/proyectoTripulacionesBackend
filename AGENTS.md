@@ -25,6 +25,7 @@
 
 ### Bases de datos
 - Pendiente de definir. Los modelos actualmente son planes en AGENTS.md.
+- El `.gitignore` excluye: `node_modules`, `.env`, `src/config/firebaseServiceAccount.json`, `src/config/firebaseServiceAccount.7z`.
 
 ### Autenticación
 - **Flujo híbrido:** Firebase Client SDK en frontend → Google Sign-In → token Firebase → backend verifica con Firebase Admin SDK → backend genera JWT propio → lo guarda en cookie httpOnly
