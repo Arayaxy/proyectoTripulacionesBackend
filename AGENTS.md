@@ -13,14 +13,17 @@
 ### Backend
 - **Node.js** (Entorno de ejecución)
 - **Express 5** (Framework web)
-- **Prisma 7** como ORM (con driver adapter `@prisma/adapter-pg` + `pg`)
-- **PostgreSQL** como base de datos
 - **Firebase Admin SDK** (verificación de tokens Firebase)
 - **JWT + jsonwebtoken** (sesión propia en cookie httpOnly)
 - **express-validator** (validación de campos)
 - **cookie-parser** (lectura de cookies)
 - **cors** (control de orígenes cruzados)
 - **dotenv** (variables de entorno)
+- **Cloudinary + Multer** (subida de archivos a Cloudinary)
+
+### Base de datos (pendiente de implementar)
+- **PostgreSQL** como motor de base de datos relacional (planificado).
+- **Prisma 7.8.0** como ORM con **driver adapter** nativo (`@prisma/adapter-pg` + `pg`) — pendiente de instalar y configurar.
 
 ### Gestor de paquetes
 - El gestor de paquetes del proyecto es **npm**.
@@ -29,11 +32,6 @@
 - `npm run dev` -> Inicia servidor en desarrollo con nodemon (cross-env)
 - `npm start` -> Inicia servidor en producción
 - `npm test` -> Ejecuta tests (pendiente de configurar)
-
-### Base de datos
-- **PostgreSQL** como motor de base de datos relacional.
-- **Prisma 7** como ORM con **driver adapter** nativo (`@prisma/adapter-pg` + `pg`).
-- Las migraciones se gestionan con `npx prisma migrate dev`.
 
 ### Lenguaje
 - **JavaScript (ES6+)** nativo para TODO el código de aplicación (controllers, services, middlewares, routes, config, etc.).
@@ -170,31 +168,81 @@ Para cada endpoint, controlador, servicio o middleware que desarrolles o modifiq
 ### Estado actual (Julio 2026)
 ```txt
 proyectoTripulacionesBackend/
+└── src/
+    ├── app.js                   # Punto de entrada principal
+    ├── config/
+    │   ├── env.js               # Variables de entorno y configuración
+    │   ├── cloudinary.js        # Configuración de Cloudinary
+    │   ├── upload.js            # Configuración de Multer + CloudinaryStorage
+    │   └── firebaseServiceAccount.js  # Credenciales Firebase desde .env
+    ├── controllers/
+    │   ├── auth.controller.js   # Controlador de autenticación (login, verify, logout)
+    │   ├── health.controller.js # Controlador de health check
+    │   └── upload.controller.js # Controlador de subida de archivos
+    ├── middlewares/
+    │   ├── auth.middleware.js   # Middleware de autenticación JWT
+    │   ├── error.middleware.js  # Manejador global de errores
+    │   ├── index.js             # Barrel export (errorHandler, notFoundHandler)
+    │   ├── notFound.middleware.js  # Manejador 404
+    │   ├── upload.middleware.js # Middleware Multer para subida de archivos
+    │   └── validate.middleware.js  # Middleware de validación
+    ├── routes/
+    │   ├── auth.route.js        # Rutas de autenticación
+    │   ├── health.route.js      # Ruta de health check
+    │   ├── upload.route.js      # Ruta de subida de archivos
+    │   └── index.js             # Barrel export (healthRouter, uploadRouter)
+    └── validations/
+        ├── user.validation.js   # Validaciones de usuario
+        └── validationChains.js  # [LEGACY] Código legacy con MikroORM — no modificar
+```
+
+### Estructura planificada (cuando se implemente Prisma y nuevos módulos)
+```txt
+proyectoTripulacionesBackend/
 ├── prisma/
 │   └── schema.prisma            # Modelo de datos (Prisma DSL)
 ├── src/
 │   ├── app.js                   # Punto de entrada principal
 │   ├── config/
 │   │   ├── env.js               # Variables de entorno y configuración
+│   │   ├── cloudinary.js        # Configuración de Cloudinary
+│   │   ├── upload.js            # Configuración de Multer + CloudinaryStorage
 │   │   └── firebaseServiceAccount.js  # Credenciales Firebase desde .env
 │   ├── lib/
 │   │   └── prisma.js            # Cliente Prisma con driver adapter
 │   ├── controllers/
 │   │   ├── auth.controller.js   # Controlador de autenticación
-│   │   └── health.controller.js # Controlador de health check
+│   │   ├── health.controller.js # Controlador de health check
+│   │   ├── upload.controller.js # Controlador de subida de archivos
+│   │   ├── event.controller.js  # CRUD eventos
+│   │   ├── service.controller.js# CRUD servicios
+│   │   ├── ponente.controller.js# CRUD ponentes
+│   │   ├── client.controller.js # CRUD clientes
+│   │   ├── user.controller.js   # Gestión de usuarios
+│   │   ├── chat.controller.js   # Mensajería
+│   │   └── notification.controller.js # Notificaciones
 │   ├── middlewares/
 │   │   ├── auth.middleware.js   # Middleware de autenticación JWT
 │   │   ├── error.middleware.js  # Manejador global de errores
 │   │   ├── index.js             # Barrel export
 │   │   ├── notFound.middleware.js  # Manejador 404
+│   │   ├── upload.middleware.js # Middleware Multer
 │   │   └── validate.middleware.js  # Middleware de validación
 │   ├── routes/
-│   │   ├── auth.route.js        # Rutas de autenticación
-│   │   ├── health.route.js      # Ruta de health check
+│   │   ├── auth.route.js        # /auth/login, /auth/verify, /auth/logout
+│   │   ├── health.route.js      # /health
+│   │   ├── upload.route.js      # /upload
+│   │   ├── event.route.js       # /events
+│   │   ├── service.route.js     # /services
+│   │   ├── ponente.route.js     # /ponentes
+│   │   ├── client.route.js      # /clients
+│   │   ├── user.route.js        # /users
+│   │   ├── chat.route.js        # /chat
+│   │   ├── notification.route.js# /notifications
 │   │   └── index.js             # Barrel export
 │   └── validations/
 │       ├── user.validation.js   # Validaciones de usuario
-│       └── validationChains.js  # [LEGACY] Código legacy con MikroORM — no modificar
+│       └── validationChains.js  # [LEGACY] no modificar
 ├── .env.example
 ├── .gitignore
 ├── jsconfig.json
@@ -346,6 +394,11 @@ model Notificacion {
 
 ## 8. MAPEO DE ENDPOINTS
 
+### Archivos / Upload
+| Método | Endpoint | Controlador | Descripción |
+|--------|----------|-------------|-------------|
+| POST | `/api/v1/upload` | upload.controller | Subir archivo a Cloudinary (admin, multipart/form-data) |
+
 ### Autenticación
 | Método | Endpoint | Controlador | Descripción |
 |--------|----------|-------------|-------------|
@@ -432,6 +485,11 @@ model Notificacion {
 ### auth.middleware.js
 - `verifyAdmin` — Verifica token JWT del header/cookie y comprueba rol `admin`.
 - Pendiente: implementar `authenticate` (genérico, verifica token) y `authorize` (por roles).
+
+### upload.middleware.js
+- Exporta `uploadFile` que es `multer({ storage: CloudinaryStorage }).single('file')`.
+- Configurado para aceptar: jpg, jpeg, png, gif, pdf, ppt, pptx, doc, docx.
+- Límite: 10 MB.
 
 ### validate.middleware.js
 - Toma errores de `express-validator`, los formatea y responde 400 si los hay.

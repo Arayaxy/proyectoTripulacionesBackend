@@ -2,27 +2,32 @@
 
 ## Fase 0: Infraestructura y Setup Inicial
 
-### 0.1 Instalación de dependencias Prisma
+### 0.1 Cloudinary / File Upload (YA IMPLEMENTADO)
+- [x] Instalar `cloudinary`, `multer-storage-cloudinary`
+- [x] Crear `src/config/cloudinary.js` — Configuración de Cloudinary
+- [x] Crear `src/config/upload.js` — Configuración Multer + CloudinaryStorage
+- [x] Crear `src/middlewares/upload.middleware.js` — Middleware Multer
+- [x] Crear `src/controllers/upload.controller.js` — Controlador de subida
+- [x] Crear `src/routes/upload.route.js` — POST `/api/v1/upload`
+- [x] Actualizar `src/config/env.js` con variables Cloudinary
+- [x] Actualizar `.env.example` con `CLOUDINARY_*`
+
+### 0.2 Prisma (PENDIENTE)
 - [ ] Instalar `@prisma/client`, `@prisma/adapter-pg`, `pg`
 - [ ] Instalar `prisma` como devDependency
-
-### 0.2 Inicializar Prisma
-- [ ] Ejecutar `npx prisma init` (genera `prisma/schema.prisma` y `DATABASE_URL` en `.env`)
+- [ ] Ejecutar `npx prisma init`
 - [ ] Actualizar `.env.example` con `DATABASE_URL`
 - [ ] Agregar `DATABASE_URL` como variable requerida en `src/config/env.js`
-
-### 0.3 Configurar driver adapter
 - [ ] Crear `src/lib/prisma.js` con `PrismaPg` + `pg.Pool`
-
-### 0.4 Schema inicial
-- [ ] Escribir modelos en `prisma/schema.prisma`: User, Evento, Servicio, Ponente, EventoPonente, Itinerario, Mensaje, Notificacion
+- [ ] Escribir modelos en `prisma/schema.prisma`
 - [ ] Ejecutar `npx prisma generate`
-- [ ] Ejecutar `npx prisma migrate dev --name init` (o `db push` si no hay BD disponible aún)
+- [ ] Ejecutar `npx prisma migrate dev --name init`
 
-### 0.5 Testing
+### 0.3 Testing
 - [ ] Configurar Supertest + framework de testing
 - [ ] Crear test de health check
 - [ ] Crear test de autenticación
+- [ ] Crear test de subida de archivos
 
 ---
 
@@ -92,8 +97,8 @@
 ### 5.2 Detalle de Evento (Ponente)
 - [ ] GET `/api/v1/events/:id` — Info completa: estado, fechas, ubicación, documentación, itinerario
 
-### 5.3 Presentaciones
-- [ ] POST `/api/v1/ponentes/:id/presentacion` — Subir presentación (pendiente: Multer + Cloudinary)
+### 5.3 Presentaciones (infraestructura Cloudinary lista, ver Fase 0.1)
+- [ ] POST `/api/v1/ponentes/:id/presentacion` — Subir presentación (usar upload existente)
 - [ ] PUT `/api/v1/ponentes/:id/presentacion` — Modificar presentación
 
 ### 5.4 Notificaciones
@@ -125,7 +130,7 @@
 
 ## Fase 7: Seguridad y Mejoras
 
-- [ ] Implementar Multer + Cloudinary para subida de archivos
+- [x] Implementar Multer + Cloudinary para subida de archivos (Fase 0.1)
 - [ ] Rate limiting
 - [ ] Helmet para seguridad de headers
 - [ ] Swagger / OpenAPI para documentación de endpoints
