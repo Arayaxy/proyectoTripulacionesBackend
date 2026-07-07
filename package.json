@@ -23,12 +23,9 @@
   },
   "type": "module",
   "dependencies": {
-<<<<<<< HEAD
-    "cloudinary": "^1.41.3",
-=======
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
->>>>>>> 427636bf07e82e51dfca0701fb4b459d045b1157
+    "cloudinary": "^1.41.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
