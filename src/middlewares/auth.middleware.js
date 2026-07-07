@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import env from '../config/env.js';
+import { env } from '../config/env.js';
 
 // TODO: La parte de autenticación va a venir de Firebase,
 // hay que ver aplicar el middleware de autenticación acorde a ello.
@@ -50,7 +50,7 @@ export const verifyAdmin = (req, res, next) => {
     }
 
     next();
-    
+
   } catch (error) {
     console.log(error)
 
