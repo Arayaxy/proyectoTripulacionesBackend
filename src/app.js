@@ -6,7 +6,9 @@ import { initializeApp, cert } from 'firebase-admin/app';
 import cookieParser from 'cookie-parser';
 import { healthRouter } from './routes/index.js';
 import { authRouter } from './routes/auth.route.js';
+import { uploadRouter } from './routes/upload.route.js';
 import { serviceAccount } from './config/firebaseServiceAccount.js';
+
 
 if (env.mode === 'production')
   console.log(`\n⚡RUNNING IN PRODUCTION MODE ⚡`);
@@ -40,6 +42,7 @@ if (env.mode === 'development')
 
 app.use(`${env.apiUrl}/health`, healthRouter);
 app.use(`${env.apiUrl}/auth`, authRouter);
+app.use(`${env.apiUrl}/upload`, uploadRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
