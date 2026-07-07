@@ -4,8 +4,7 @@ import cors from 'cors';
 import { notFoundHandler, errorHandler } from './middlewares/index.js';
 import { initializeApp, cert } from 'firebase-admin/app';
 import cookieParser from 'cookie-parser';
-import { healthRouter } from './routes/index.js';
-import { authRouter } from './routes/auth.route.js';
+import { healthRouter, authRouter, adminRouter } from './routes/index.js';
 import { serviceAccount } from './config/firebaseServiceAccount.js';
 
 if (env.mode === 'production')
@@ -40,6 +39,7 @@ if (env.mode === 'development')
 
 app.use(`${env.apiUrl}/health`, healthRouter);
 app.use(`${env.apiUrl}/auth`, authRouter);
+app.use(`${env.apiUrl}/admin`, adminRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
