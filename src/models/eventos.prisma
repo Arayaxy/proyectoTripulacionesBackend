@@ -8,7 +8,8 @@ model Evento {
   numero_personas  Int
   tipo_evento      String
   nota             String
-  presupuestos     Presupuesto[]
+  presupuestoId    String?         @unique @db.Uuid
+  presupuesto      Presupuesto?    @relation(fields: [presupuestoId], references: [id_presupuesto]) // Enlace de clave foránea
   clienteId        String          @db.Uuid
   cliente          Cliente         @relation(fields: [clienteId], references: [id_cliente]) // Enlace de clave foránea
   estadoId         String          @db.Uuid

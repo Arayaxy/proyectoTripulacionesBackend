@@ -15,8 +15,7 @@ model Presupuesto {
   audiovisuales        Boolean
   otros                Boolean
   observaciones        String
-  eventoId             String  @db.Uuid
-  evento               Evento  @relation(fields: [eventoId], references: [id_evento]) // Enlace de clave foránea
+  evento               Evento?
 
   @@map("presupuestos")
 }
