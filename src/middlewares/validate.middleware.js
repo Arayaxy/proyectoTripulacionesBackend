@@ -6,8 +6,13 @@ export const validate = (req, res, next) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({
       ok: false,
-      msg: 'Error de validacion',
-      errors: errors.array()
+      message: 'Error de validacion',
+      details: errors.array().map(e => ({
+        path: e.path,
+        type: 'field',
+        title: e.msg,
+        detail: e.msg,
+      }))
     });
   }
 

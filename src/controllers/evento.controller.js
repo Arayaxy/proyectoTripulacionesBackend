@@ -29,7 +29,7 @@ export const getEvento = async (req, res, next) => {
     const evento = await prisma.evento.findUnique({ where: { id_evento: req.params.id } });
 
     if (!evento)
-      return res.status(404).json({ ok: false, msg: 'Evento no encontrado' });
+      return res.status(404).json({ ok: false, message: 'Evento no encontrado', error: [{ type: 'not_found', title: 'Evento no encontrado', detail: 'No existe un evento con ese ID' }] });
 
     res.status(200).json({ ok: true, data: evento });
   } catch (error) {
@@ -57,7 +57,7 @@ export const postEvento = async (req, res, next) => {
     res.status(201).json({ ok: true, data: nuevo });
   } catch (error) {
     if (error.code === 'P2003')
-      return res.status(400).json({ ok: false, msg: 'El clienteId o estadoId no existen' });
+      return res.status(400).json({ ok: false, message: 'El clienteId o estadoId no existen', error: [{ type: 'foreign_key', title: 'Referencia inválida', detail: 'El clienteId o estadoId proporcionado no existe' }] });
     next(error);
   }
 };
@@ -66,7 +66,7 @@ export const patchEvento = async (req, res, next) => {
   try {
     const exists = await prisma.evento.findUnique({ where: { id_evento: req.params.id } });
     if (!exists)
-      return res.status(404).json({ ok: false, msg: 'Evento no encontrado' });
+      return res.status(404).json({ ok: false, message: 'Evento no encontrado', error: [{ type: 'not_found', title: 'Evento no encontrado', detail: 'No existe un evento con ese ID' }] });
 
     const { nombre_evento, ciudad, lugar_confirmado, fecha_inicio, fecha_fin, numero_personas, tipo_evento, nota, clienteId, estadoId } = req.body;
 
@@ -90,7 +90,7 @@ export const patchEvento = async (req, res, next) => {
     res.status(200).json({ ok: true, data: actualizado });
   } catch (error) {
     if (error.code === 'P2003')
-      return res.status(400).json({ ok: false, msg: 'El clienteId o estadoId no existen' });
+      return res.status(400).json({ ok: false, message: 'El clienteId o estadoId no existen', error: [{ type: 'foreign_key', title: 'Referencia inválida', detail: 'El clienteId o estadoId proporcionado no existe' }] });
     next(error);
   }
 };
@@ -99,11 +99,11 @@ export const deleteEvento = async (req, res, next) => {
   try {
     const exists = await prisma.evento.findUnique({ where: { id_evento: req.params.id } });
     if (!exists)
-      return res.status(404).json({ ok: false, msg: 'Evento no encontrado' });
+      return res.status(404).json({ ok: false, message: 'Evento no encontrado', error: [{ type: 'not_found', title: 'Evento no encontrado', detail: 'No existe un evento con ese ID' }] });
 
     await prisma.evento.delete({ where: { id_evento: req.params.id } });
 
-    res.status(200).json({ ok: true, msg: 'Evento eliminado correctamente' });
+    res.status(200).json({ ok: true, message: 'Evento eliminado correctamente' });
   } catch (error) {
     next(error);
   }

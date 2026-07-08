@@ -29,7 +29,7 @@ export const getCliente = async (req, res, next) => {
     const cliente = await prisma.cliente.findUnique({ where: { id_cliente: req.params.id } });
 
     if (!cliente)
-      return res.status(404).json({ ok: false, msg: 'Cliente no encontrado' });
+      return res.status(404).json({ ok: false, message: 'Cliente no encontrado', error: [{ type: 'not_found', title: 'Cliente no encontrado', detail: 'No existe un cliente con ese ID' }] });
 
     res.status(200).json({ ok: true, data: cliente });
   } catch (error) {
@@ -54,7 +54,7 @@ export const postCliente = async (req, res, next) => {
     res.status(201).json({ ok: true, data: nuevo });
   } catch (error) {
     if (error.code === 'P2002')
-      return res.status(409).json({ ok: false, msg: 'El email ya está registrado' });
+      return res.status(409).json({ ok: false, message: 'El email ya está registrado', error: [{ type: 'unique_violation', title: 'Email duplicado', detail: 'El email proporcionado ya está en uso' }] });
     next(error);
   }
 };
@@ -65,7 +65,7 @@ export const patchCliente = async (req, res, next) => {
 
     const exists = await prisma.cliente.findUnique({ where: { id_cliente: req.params.id } });
     if (!exists)
-      return res.status(404).json({ ok: false, msg: 'Cliente no encontrado' });
+      return res.status(404).json({ ok: false, message: 'Cliente no encontrado', error: [{ type: 'not_found', title: 'Cliente no encontrado', detail: 'No existe un cliente con ese ID' }] });
 
     const actualizado = await prisma.cliente.update({
       where: { id_cliente: req.params.id },
@@ -81,7 +81,7 @@ export const patchCliente = async (req, res, next) => {
     res.status(200).json({ ok: true, data: actualizado });
   } catch (error) {
     if (error.code === 'P2002')
-      return res.status(409).json({ ok: false, msg: 'El email ya está registrado' });
+      return res.status(409).json({ ok: false, message: 'El email ya está registrado', error: [{ type: 'unique_violation', title: 'Email duplicado', detail: 'El email proporcionado ya está en uso' }] });
     next(error);
   }
 };
@@ -90,11 +90,11 @@ export const deleteCliente = async (req, res, next) => {
   try {
     const exists = await prisma.cliente.findUnique({ where: { id_cliente: req.params.id } });
     if (!exists)
-      return res.status(404).json({ ok: false, msg: 'Cliente no encontrado' });
+      return res.status(404).json({ ok: false, message: 'Cliente no encontrado', error: [{ type: 'not_found', title: 'Cliente no encontrado', detail: 'No existe un cliente con ese ID' }] });
 
     await prisma.cliente.delete({ where: { id_cliente: req.params.id } });
 
-    res.status(200).json({ ok: true, msg: 'Cliente eliminado correctamente' });
+    res.status(200).json({ ok: true, message: 'Cliente eliminado correctamente' });
   } catch (error) {
     next(error);
   }

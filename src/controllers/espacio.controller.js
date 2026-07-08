@@ -25,7 +25,7 @@ export const getEspacio = async (req, res, next) => {
     const espacio = await prisma.espacio.findUnique({ where: { id_espacio: req.params.id } });
 
     if (!espacio)
-      return res.status(404).json({ ok: false, msg: 'Espacio no encontrado' });
+      return res.status(404).json({ ok: false, message: 'Espacio no encontrado', error: [{ type: 'not_found', title: 'Espacio no encontrado', detail: 'No existe un espacio con ese ID' }] });
 
     res.status(200).json({ ok: true, data: espacio });
   } catch (error) {
@@ -60,7 +60,7 @@ export const patchEspacio = async (req, res, next) => {
   try {
     const exists = await prisma.espacio.findUnique({ where: { id_espacio: req.params.id } });
     if (!exists)
-      return res.status(404).json({ ok: false, msg: 'Espacio no encontrado' });
+      return res.status(404).json({ ok: false, message: 'Espacio no encontrado' });
 
     const { nombre_espacio, ciudad, direccion, aforo, nota, telefono_contacto, nombre_contacto, email_contacto } = req.body;
 
@@ -88,11 +88,11 @@ export const deleteEspacio = async (req, res, next) => {
   try {
     const exists = await prisma.espacio.findUnique({ where: { id_espacio: req.params.id } });
     if (!exists)
-      return res.status(404).json({ ok: false, msg: 'Espacio no encontrado' });
+      return res.status(404).json({ ok: false, message: 'Espacio no encontrado', error: [{ type: 'not_found', title: 'Espacio no encontrado', detail: 'No existe un espacio con ese ID' }] });
 
     await prisma.espacio.delete({ where: { id_espacio: req.params.id } });
 
-    res.status(200).json({ ok: true, msg: 'Espacio eliminado correctamente' });
+    res.status(200).json({ ok: true, message: 'Espacio eliminado correctamente' });
   } catch (error) {
     next(error);
   }
