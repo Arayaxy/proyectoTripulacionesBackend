@@ -1,21 +1,21 @@
 model Presupuesto {
-  id_presupuesto       String  @id @default(uuid(7)) @db.Uuid
-  estado_prespuesto    Boolean
-  total                Int
-  fecha                Int
-  nota_ubicacion       String
-  precio_ubicacion     Int
-  nota_catering        String
-  precio_catering      Int
-  nota_audiovisuales   String
-  precio_audiovisuales Int
-  nota_otros           String
-  precio_otros         Int
-  catering             Boolean
-  audiovisuales        Boolean
-  otros                Boolean
-  observaciones        String
-  evento               Evento?
+  id_presupuesto      String   @id @default(uuid(7)) @db.Uuid
+  estadoPresupuesto   Boolean  @map("estado_presupuesto")
+  total               Int
+  fecha               DateTime
+  notaUbicacion       String   @map("nota_ubicacion")
+  precioUbicacion     Int      @map("precio_ubicacion")
+  catering            Boolean
+  notaCatering        String   @map("nota_catering")
+  precioCatering      Int      @map("precio_catering")
+  audiovisuales       Boolean
+  notaAudiovisuales   String   @map("nota_audiovisuales")
+  precioAudiovisuales Int      @map("precio_audiovisuales")
+  otros               Boolean
+  notaOtros           String   @map("nota_otros")
+  precioOtros         Int      @map("precio_otros")
+  observaciones       String
+  evento              Evento?
 
   @@map("presupuestos")
 }

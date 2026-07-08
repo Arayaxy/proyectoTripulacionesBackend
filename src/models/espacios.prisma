@@ -1,15 +1,15 @@
 model Espacio {
-  id_espacio        String @id @default(uuid(7)) @db.Uuid
-  nombre_espacio    String
-  ciudad            String
-  direccion         String
-  aforo             String
-  nota              String
-  telefono_contacto Int
-  nombre_contacto   String
-  email_contacto    String @unique
-  salaId            String @db.Uuid
-  sala              Sala   @relation(fields: [salaId], references: [id_sala]) // Enlace de clave foránea
+  id_espacio       String @id @default(uuid(7)) @db.Uuid
+  nombreEspacio    String @map("nombre_espacio")
+  ciudad           String
+  direccion        String
+  aforo            Int
+  nota             String
+  telefonoContacto String @map("telefono_contacto")
+  nombreContacto   String @map("nombre_contacto")
+  emailContacto    String @map("email_contacto")
+  salaId           String @map("id_sala") @db.Uuid
+  sala             Sala   @relation(fields: [salaId], references: [id_sala]) // Enlace de clave foránea
 
   @@map("espacios")
 }
