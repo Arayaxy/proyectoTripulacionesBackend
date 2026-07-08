@@ -144,7 +144,7 @@ proyectoTripulacionesBackend/
 │   ├── config/
 │   │   ├── env.js               # Variables de entorno validadas
 │   │   ├── cloudinary.js        # Configuración de Cloudinary
-│   │   ├── upload.js            # Configuración de Multer + CloudinaryStorage
+│   │   ├── upload.js            # Configuración de Multer (imagen, presentacion, documento)
 │   │   └── firebaseServiceAccount.js  # Credenciales Firebase desde .env
 │   ├── lib/
 │   │   ├── prisma.js            # Cliente Prisma con driver adapter PrismaPg
@@ -242,7 +242,9 @@ proyectoTripulacionesBackend/
 ### Upload
 | Método | Endpoint | Controlador | Auth | Descripción |
 |--------|----------|-------------|------|-------------|
-| POST | `/api/v1/upload` | upload.controller | verifyAdmin | Subir archivo a Cloudinary |
+| POST | `/api/v1/upload/ponente/imagen` | upload.controller | verifyAdmin | Subir imagen de perfil de ponente (jpg, jpeg, png, gif) |
+| POST | `/api/v1/upload/ponente/presentacion` | upload.controller | verifyAdmin + computeVersion | Subir presentación de ponente (pdf, ppt, pptx), versionado automático |
+| POST | `/api/v1/upload/documento` | upload.controller | verifyAdmin | Subir documento genérico (pdf, ppt, pptx, doc, docx) |
 
 ### Clientes
 | Método | Endpoint | Controlador | Auth | Descripción |
@@ -361,8 +363,11 @@ Este patrón debe seguirse para cualquier nueva entidad.
 - `authenticate` y `authorize` comentados (pendientes).
 
 ### upload.middleware.js
-- `uploadFile`: `upload.single('file')` con CloudinaryStorage.
-- Formatos: jpg, jpeg, png, gif, pdf, ppt, pptx, doc, docx. Límite: 10 MB.
+- **`imagenPonente`**: `uploadImagenPonente.single('file')`. Carpeta: `ponentes/imagenes`. Formatos: jpg, jpeg, png, gif.
+- **`presentacion`**: `uploadPresentacion.single('file')`. Carpeta: `ponentes/presentaciones`. Formatos: pdf, ppt, pptx.
+- **`documento`**: `uploadDocumento.single('file')`. Carpeta: `documentos`. Formatos: pdf, ppt, pptx, doc, docx.
+- **`computeVersion`**: Versionador en memoria por `evento_id` + `ponente_id`. Asigna `req.customPublicId`.
+- Límite de archivo: **30 MB** (configurado en `src/config/upload.js`).
 
 ### validate.middleware.js
 - `validate`: formatea errores de `express-validator`, responde 400.
