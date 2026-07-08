@@ -1,0 +1,15 @@
+model Espacio {
+  id_espacio        String @id @default(uuid(7)) @db.Uuid
+  nombre_espacio    String
+  ciudad            String
+  direccion         String
+  aforo             String
+  nota              String
+  telefono_contacto Int
+  nombre_contacto   String
+  email_contacto    String @unique
+  salaId            String @db.Uuid
+  sala              Sala   @relation(fields: [salaId], references: [id_sala]) // Enlace de clave foránea
+
+  @@map("espacios")
+}

@@ -1,0 +1,7 @@
+model Usuario {
+  id_usuario     String @id @default(uuid(7)) @db.Uuid
+  nombre_usuario String
+  rol            String
+
+  @@map("usuarios")
+}

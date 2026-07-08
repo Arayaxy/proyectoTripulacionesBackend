@@ -1,12 +1,22 @@
 model Evento {
-  id          String   @id @default(uuid(7)) @db.Uuid
-  nombre      String
-  descripcion String?
-  completado  Boolean  @default(false)
-  clienteId   String   @db.Uuid
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  cliente     Cliente  @relation(fields: [clienteId], references: [id]) // Enlace de clave foránea
+  id_evento        String          @id @default(uuid(7)) @db.Uuid
+  nombre_evento    String
+  ciudad           String
+  lugar_confirmado String
+  fecha_inicio     Int
+  fecha_fin        Int
+  numero_personas  Int
+  tipo_evento      String
+  nota             String
+  presupuestos     Presupuesto[]
+  clienteId        String          @db.Uuid
+  cliente          Cliente         @relation(fields: [clienteId], references: [id_cliente]) // Enlace de clave foránea
+  estadoId         String          @db.Uuid
+  estado           Estado          @relation(fields: [estadoId], references: [id_estado]) // Enlace de clave foránea
+  salaId           String          @db.Uuid
+  sala             Sala            @relation(fields: [salaId], references: [id_sala]) // Enlace de clave foránea
+  evento_ponenteId String          @db.Uuid
+  evento_ponente   Eventos_ponente @relation(fields: [evento_ponenteId], references: [id_evento_ponente]) // Enlace de clave foránea
 
   @@map("eventos")
 }

@@ -1,0 +1,20 @@
+model Eventos_ponente {
+  id_evento_ponente         String   @id @default(uuid(7)) @db.Uuid
+  nombre_hotel              String
+  nota_transporte           String
+  horario_ida_transporte    String
+  horario_vuelta_transporte String
+  localizacion_hotel        String
+  horario_ponencia          String
+  checkin_horario           String
+  ponente_estado            String
+  presentacion_link         String
+  billete_ida_link          String
+  billete_vuelta_link       String
+  tipo_ponencia             String
+  eventos                   Evento[]
+  ponenteId                 String   @db.Uuid
+  ponente                   Ponente  @relation(fields: [ponenteId], references: [id_ponente]) // Enlace de clave foránea
+
+  @@map("eventos_ponentes")
+}
