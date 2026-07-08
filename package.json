@@ -42,10 +42,16 @@
     "@firebase/util@1.15.1": true,
     "protobufjs@7.6.5": true,
     "prisma@7.8.0": true,
-    "@prisma/engines@7.8.0": true
+    "@prisma/engines@7.8.0": true,
+    "core-js@3.49.0": true
   },
   "devDependencies": {
     "cross-env": "^10.1.0",
     "prisma": "^7.8.0"
+  },
+  "overrides": {
+    "jwks-rsa": {
+      "jose": "^5.0.0"
+    }
   }
 }
