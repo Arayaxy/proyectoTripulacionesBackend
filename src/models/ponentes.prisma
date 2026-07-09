@@ -1,15 +1,15 @@
 model Ponente {
-  id_ponente         String           @id @default(uuid(7)) @db.Uuid
-  nombrePonente      String           @map("nombre_ponente")
-  docuIdentificacion String           @map("docu_identificacion")
-  email              String           @unique
+  id                 String     @id @default(uuid(7)) @db.Uuid
+  nombrePonente      String     @map("nombre_ponente")
+  docuIdentificacion String     @map("docu_identificacion")
+  email              String     @unique
   sector             String
   telefono           String
-  fotoLink           String           @map("foto_link")
-  cvLink             String           @map("cv_link")
+  fotoLink           String     @map("foto_link")
+  cvLink             String     @map("cv_link")
   empresa            String
   cargo              String
-  eventosPonente     EventosPonente[]
+  eventosPonente     Ponencia[]
 
   @@map("ponentes")
 }

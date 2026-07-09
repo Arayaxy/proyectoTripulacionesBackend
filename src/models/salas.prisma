@@ -1,5 +1,5 @@
 model Sala {
-  id_sala          String    @id @default(uuid(7)) @db.Uuid
+  id               String    @id @default(uuid(7)) @db.Uuid
   nombreSala       String    @map("nombre_sala")
   tipoSala         String    @map("tipo_sala")
   capacidadMaxSala Int       @map("capacidad_max_sala")
