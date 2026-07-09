@@ -1,9 +1,12 @@
 import { Router } from 'express';
-import { body, param, query } from 'express-validator';
+import { query } from 'express-validator';
 
-import { validarToken } from '../middlewares/auth.middleware.js';
-import { validarRol } from '../middlewares/validarRol.js';
-import { validate } from '../middlewares/validate.middleware.js';
+import { authenticate, authorize, validateInputs } from '../middlewares/index.js';
+import {
+  espacioIdValidation,
+  createEspacioValidation,
+  updateEspacioValidation,
+} from '../validations/espacio.validation.js';
 
 import {
   getEspacios,
@@ -16,35 +19,15 @@ import {
 
 export const espacioRouter = Router();
 
-//espacioRouter.use(validarToken, validarRol('admin'));
+espacioRouter.use(authenticate, authorize('admin'));
 
 espacioRouter.get('/buscar', [
   query('min').optional().isInt({ min: 0 }),
   query('max').optional().isInt({ min: 0 }),
-  validate
 ], buscarPorCapacidad);
 
-espacioRouter.get('/', [
-  query('ciudad').optional().isString(),
-  validate
-], getEspacios);
-
-espacioRouter.get('/:id', [
-  param('id').isUUID(),
-  validate
-], getEspacio);
-
-espacioRouter.post('/', [
-  body('nombreEspacio').notEmpty(),
-  validate
-], postEspacio);
-
-espacioRouter.patch('/:id', [
-  param('id').isUUID(),
-  validate
-], patchEspacio);
-
-espacioRouter.delete('/:id', [
-  param('id').isUUID(),
-  validate
-], deleteEspacio);
+espacioRouter.get('/', getEspacios);
+espacioRouter.get('/:id', espacioIdValidation, validateInputs, getEspacio);
+espacioRouter.post('/', createEspacioValidation, validateInputs, postEspacio);
+espacioRouter.patch('/:id', espacioIdValidation, updateEspacioValidation, validateInputs, patchEspacio);
+espacioRouter.delete('/:id', espacioIdValidation, validateInputs, deleteEspacio);

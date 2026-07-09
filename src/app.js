@@ -5,7 +5,7 @@ import { notFoundHandler, errorHandler } from './middlewares/index.js';
 import { initializeApp, cert } from 'firebase-admin/app';
 import cookieParser from 'cookie-parser';
 
-import { healthRouter, authRouter, clienteRouter, espacioRouter, eventoRouter, ponenteRouter, uploadRouter } from './routes/index.js';
+import { healthRouter, authRouter, clienteRouter, espacioRouter, eventoRouter, ponenteRouter, salaRouter, ponenciaRouter, uploadRouter } from './routes/index.js';
 
 import { serviceAccount } from './config/firebaseServiceAccount.js';
 
@@ -48,6 +48,8 @@ app.use(`${env.apiUrl}/eventos`, eventoRouter);
 app.use(`${env.apiUrl}/clientes`, clienteRouter);
 app.use(`${env.apiUrl}/espacios`, espacioRouter);
 app.use(`${env.apiUrl}/ponentes`, ponenteRouter);
+app.use(`${env.apiUrl}/salas`, salaRouter);
+app.use(`${env.apiUrl}/ponencias`, ponenciaRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

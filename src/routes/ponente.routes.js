@@ -1,10 +1,13 @@
 import { Router } from 'express';
-import { body, param, query } from 'express-validator';
+import { query } from 'express-validator';
 
-import { validarToken } from '../middlewares/auth.middleware.js';
-import { validarRol } from '../middlewares/validarRol.js';
-import { validate } from '../middlewares/validate.middleware.js';
-import { uploadFile } from '../middlewares/upload.middleware.js';
+import { authenticate, authorize, validateInputs } from '../middlewares/index.js';
+import {
+  ponenteIdValidation,
+  createPonenteValidation,
+  updatePonenteValidation,
+} from '../validations/ponente.validation.js';
+import { imagenPonente as uploadFile } from '../middlewares/upload.middleware.js';
 
 import {
   getPonentes,
@@ -16,31 +19,10 @@ import {
 
 export const ponenteRouter = Router();
 
-// ponenteRouter.use(validarToken, validarRol('admin'));
+ponenteRouter.use(authenticate, authorize('admin'));
 
-ponenteRouter.get('/', [
-  query('sector').optional().isString(),
-  validate
-], getPonentes);
-
-ponenteRouter.get('/:id', [
-  param('id').isUUID(),
-  validate
-], getPonente);
-
-ponenteRouter.post('/', uploadFile, [
-  body('nombrePonente').notEmpty(),
-  body('email').isEmail(),
-  validate
-], postPonente);
-
-ponenteRouter.patch('/:id', uploadFile, [
-  param('id').isUUID(),
-  body('email').optional().isEmail(),
-  validate
-], patchPonente);
-
-ponenteRouter.delete('/:id', [
-  param('id').isUUID(),
-  validate
-], deletePonente);
+ponenteRouter.get('/', getPonentes);
+ponenteRouter.get('/:id', ponenteIdValidation, validateInputs, getPonente);
+ponenteRouter.post('/', uploadFile, createPonenteValidation, validateInputs, postPonente);
+ponenteRouter.patch('/:id', uploadFile, ponenteIdValidation, updatePonenteValidation, validateInputs, patchPonente);
+ponenteRouter.delete('/:id', ponenteIdValidation, validateInputs, deletePonente);

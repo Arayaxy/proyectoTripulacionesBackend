@@ -1,9 +1,4 @@
 import { Router } from 'express';
-import { body, param, query } from 'express-validator';
-
-import { validarToken } from '../middlewares/auth.middleware.js';
-import { validarRol } from '../middlewares/validarRol.js';
-import { validate } from '../middlewares/validate.middleware.js';
 
 import {
   getEventos,
@@ -12,37 +7,25 @@ import {
   patchEvento,
   deleteEvento,
 } from '../controllers/evento.controller.js';
+import { authenticate, authorize, validateInputs } from '../middlewares/index.js';
+import {
+  createEventoValidation,
+  eventoIdValidation,
+  updateEventoValidation,
+} from '../validations/evento.validation.js';
 
 export const eventoRouter = Router();
 
-// eventoRouter.use(validarToken, validarRol('admin'));
+eventoRouter.use(authenticate, authorize('admin'));
 
-eventoRouter.get('/', [
-  query('ciudad').optional().isString(),
-  query('tipoEvento').optional().isString(),
-  validate
-], getEventos);
-
-eventoRouter.get('/:id', [
-  param('id').isUUID(),
-  validate
-], getEvento);
-
-eventoRouter.post('/', [
-  body('nombreEvento').notEmpty(),
-  body('idCliente').isUUID(),
-  body('idEstado').isUUID(),
-  validate
-], postEvento);
-
-eventoRouter.patch('/:id', [
-  param('id').isUUID(),
-  body('idCliente').optional().isUUID(),
-  body('idEstado').optional().isUUID(),
-  validate
-], patchEvento);
-
-eventoRouter.delete('/:id', [
-  param('id').isUUID(),
-  validate
-], deleteEvento);
+eventoRouter.get('/', getEventos);
+eventoRouter.get('/:id', eventoIdValidation, validateInputs, getEvento);
+eventoRouter.post('/', createEventoValidation, validateInputs, postEvento);
+eventoRouter.patch(
+  '/:id',
+  eventoIdValidation,
+  updateEventoValidation,
+  validateInputs,
+  patchEvento
+);
+eventoRouter.delete('/:id', eventoIdValidation, validateInputs, deleteEvento);

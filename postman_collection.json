@@ -169,6 +169,60 @@
         },
         { "name": "DELETE eliminar ponente", "request": { "method": "DELETE", "url": "{{base_url}}/ponentes/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6" } }
       ]
+    },
+    {
+      "name": "Salas",
+      "item": [
+        { "name": "GET listar salas", "request": { "method": "GET", "url": "{{base_url}}/salas" } },
+        { "name": "GET filtrar salas por espacio", "request": { "method": "GET", "url": "{{base_url}}/salas?idEspacio=bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6" } },
+        { "name": "GET buscar sala por ID", "request": { "method": "GET", "url": "{{base_url}}/salas/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6" } },
+        {
+          "name": "POST crear sala",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"nombreSala\": \"Sala A\",\n  \"tipoSala\": \"Conferencias\",\n  \"capacidadMaxSala\": 100,\n  \"idEspacio\": \"uuid-del-espacio\"\n}" },
+            "url": "{{base_url}}/salas"
+          }
+        },
+        {
+          "name": "PATCH actualizar sala",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"nombreSala\": \"Sala A renovada\",\n  \"capacidadMaxSala\": 120\n}" },
+            "url": "{{base_url}}/salas/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
+          }
+        },
+        { "name": "DELETE eliminar sala", "request": { "method": "DELETE", "url": "{{base_url}}/salas/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6" } }
+      ]
+    },
+    {
+      "name": "Ponencias",
+      "item": [
+        { "name": "GET listar ponencias", "request": { "method": "GET", "url": "{{base_url}}/ponencias" } },
+        { "name": "GET filtrar ponencias por ponente", "request": { "method": "GET", "url": "{{base_url}}/ponencias?idPonente=bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6" } },
+        { "name": "GET buscar ponencia por ID", "request": { "method": "GET", "url": "{{base_url}}/ponencias/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6" } },
+        {
+          "name": "POST crear ponencia",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"nombreHotel\": \"Hotel Centro\",\n  \"localizacionHotel\": \"Calle Mayor 1\",\n  \"horarioPonencia\": \"2026-07-15T10:00:00.000Z\",\n  \"ponenteEstado\": \"Confirmado\",\n  \"tipoPonencia\": \"Charla\",\n  \"idPonente\": \"uuid-del-ponente\"\n}" },
+            "url": "{{base_url}}/ponencias"
+          }
+        },
+        {
+          "name": "PATCH actualizar ponencia",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"ponenteEstado\": \"Pendiente\",\n  \"horarioPonencia\": \"2026-07-15T12:00:00.000Z\"\n}" },
+            "url": "{{base_url}}/ponencias/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
+          }
+        },
+        { "name": "DELETE eliminar ponencia", "request": { "method": "DELETE", "url": "{{base_url}}/ponencias/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6" } }
+      ]
     }
   ]
 }
