@@ -27,8 +27,19 @@ const storagePresentacion = new CloudinaryStorage({
   }),
 });
 
+const storageCV = new CloudinaryStorage({
+  cloudinary,
+  params: (req, file) => ({
+    folder: 'ponentes/cv',
+    public_id: req.query.ponente_id ? `${req.query.ponente_id}/cv` : undefined,
+    allowed_formats: ['pdf', 'doc', 'docx'],
+    resource_type: 'auto',
+  }),
+});
+
 const multerOptions = { limits: { fileSize: 30 * 1024 * 1024 } };
 
 export const uploadImagenPonente = multer({ ...multerOptions, storage: storageImagen });
 export const uploadPresentacion  = multer({ ...multerOptions, storage: storagePresentacion });
-export const uploadDocumento = multer({ ...multerOptions, storage: makeStorage('documentos', ['pdf', 'ppt', 'pptx', 'doc', 'docx']) });
+export const uploadCV            = multer({ ...multerOptions, storage: storageCV });
+export const uploadDocumento     = multer({ ...multerOptions, storage: makeStorage('documentos', ['pdf', 'ppt', 'pptx', 'doc', 'docx']) });

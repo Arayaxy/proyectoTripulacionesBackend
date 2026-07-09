@@ -33,3 +33,15 @@ export const presentacionValidation = checkSchema({
   },
 // Los dos identificadores llegan como parámetros de consulta.
 }, ['query']);
+
+// Valida el ID del ponente para subir su CV.
+export const cvValidation = checkSchema({
+  ponente_id: {
+    notEmpty: {
+      errorMessage: 'ponente_id es obligatorio',
+    },
+    isUUID: {
+      errorMessage: 'ponente_id no es un UUID válido',
+    },
+  },
+}, ['query']);

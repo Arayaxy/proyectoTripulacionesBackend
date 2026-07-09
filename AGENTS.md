@@ -25,10 +25,10 @@
 - **PostgreSQL** (motor de base de datos relacional)
 - **Prisma 7.8.0** (ORM con driver adapter `@prisma/adapter-pg`)
 - Cliente en `src/lib/prisma.js` con `PrismaPg` adapter
-- Schema modular en `src/models/*.prisma`, config en `prisma.config.ts`
+- Schema modular en `src/models/*.prisma` (10 archivos), config en `prisma.config.ts`
 - Cliente generado en `src/generated/prisma/`
 - IDs con **UUID v7** (`@default(uuid(7)) @db.Uuid`)
-- Migraciones en `migrations/`
+- Migraciones en `migrations/` (sin migraciones generadas aún en esta rama)
 
 ### Despliegue
 - **Vercel** con `vercel.json` (includeFiles: `src/generated/**`)
@@ -45,19 +45,19 @@
 - `npm run db:deploy` -> Aplica migraciones pendientes (producción)
 - `npm run db:reset` -> Resetea la base de datos
 - `npm run db:generate` -> Regenera Prisma Client
-- `npm test` -> Ejecuta tests (pendiente de configurar)
+- `npm test` -> Ejecuta tests con `node --test`
 
 ### Lenguaje
 - **JavaScript (ES6+)** nativo para TODO el código de aplicación (controllers, services, middlewares, routes, config).
 - **TypeScript PROHIBIDO** en cualquier archivo de aplicación.
 - **Excepción:** `prisma.config.ts` y el output de `prisma generate` en `src/generated/prisma/*.ts`.
-- El agente NO debe crear, modificar ni escribir archivos `.ts` o `.tsx` fuera de la configuración de Prisma.
 
-### Autenticación
+### Autenticación y autorización
 - **Firebase Authentication** con Google Sign-In (frontend gestiona el popup).
-- Backend recibe token de Firebase ID → verifica con Firebase Admin SDK → crea JWT propio → lo almacena en cookie httpOnly.
-- `auth.middleware.js` exporta `verifyAdmin` (JWT verify + role check).
-- `authenticate` y `authorize` comentados, pendientes de migrar a Firebase Admin SDK.
+- Backend recibe token Firebase ID → verifica con Firebase Admin SDK → crea JWT propio → cookie httpOnly.
+- **`authenticate.middleware.js`**: verifica JWT desde `req.cookies.token`.
+- **`authorize.middleware.js`**: `authorize(...roles)` — verifica `req.user.role`.
+- Todas las rutas protegidas usan `authenticate, authorize('admin')`.
 
 ---
 
@@ -103,23 +103,17 @@
 Para cada endpoint, controlador, servicio o middleware que desarrolles o modifiques, es obligatorio aplicar el siguiente flujo TDD antes de dar por completada cualquier tarea:
 
 ### Fase 0: DEPENDENCIAS (Instalación)
-- **Objetivo:** Asegurar que las dependencias necesarias están disponibles antes de comenzar.
-- **Acción:** Si la tarea requiere una nueva dependencia, el agente **SIEMPRE debe consultar antes de instalarla**, explicando:
-  1. **Qué dependencia es** y para qué sirve.
-  2. **Por qué es necesaria** (alternativas consideradas y por qué se descartaron).
-  3. **Cómo podría afectar** al rendimiento, seguridad y estructura del proyecto.
-  4. **Si requiere cambios en la configuración** o en la estructura de carpetas.
-- Una vez autorizado, ejecutar `npm install <paquete>`.
+- Si la tarea requiere una nueva dependencia, el agente **SIEMPRE debe consultar antes de instalarla**, explicando qué es, por qué, impacto y configuración necesaria.
 - **Regla de oro:** Ninguna dependencia se instala sin autorización explícita.
 
 ### Fase RED (Test Primero)
-- Escribir la prueba (Supertest). El test debe definir el comportamiento esperado (éxito) y el manejo de fallos.
+- Escribir la prueba con `node --test`. El test debe definir comportamiento esperado y fallos.
 
 ### Fase GREEN (Código Mínimo)
-- Escribir el código estrictamente necesario en el archivo de producción para que el test pase.
+- Escribir el código estrictamente necesario para que el test pase.
 
 ### Fase REFACTOR (Optimización)
-- Refactorizar el código para cumplir con arquitectura limpia y buenas prácticas. Los tests deben seguir en verde.
+- Refactorizar para arquitectura limpia y buenas prácticas. Los tests deben seguir en verde.
 
 ---
 
@@ -129,58 +123,65 @@ Para cada endpoint, controlador, servicio o middleware que desarrolles o modifiq
 ```txt
 proyectoTripulacionesBackend/
 ├── prisma.config.ts             # Configuración del generador Prisma
-├── vercel.json                  # Configuración de despliegue en Vercel
-├── migrations/                  # Migraciones de Prisma
-│   ├── 20260707110615_init/
-│   └── migration_lock.toml
+├── vercel.json                  # Despliegue Vercel
 ├── src/
 │   ├── app.js                   # Punto de entrada principal
 │   ├── generated/
 │   │   └── prisma/              # Prisma Client generado (gitignored)
-│   ├── models/
+│   ├── models/                  # 10 archivos .prisma (schema modular)
 │   │   ├── config.prisma        # Generator + datasource
 │   │   ├── clientes.prisma      # Modelo Cliente
-│   │   └── eventos.prisma       # Modelo Evento
+│   │   ├── espacios.prisma      # Modelo Espacio
+│   │   ├── estados.prisma       # Modelo Estado
+│   │   ├── eventoPonente.prisma # Modelo EventosPonente (tabla pivote)
+│   │   ├── eventos.prisma       # Modelo Evento
+│   │   ├── ponentes.prisma      # Modelo Ponente
+│   │   ├── presupuestos.prisma  # Modelo Presupuesto
+│   │   ├── salas.prisma         # Modelo Sala
+│   │   └── usuarios.prisma      # Modelo Usuario
 │   ├── config/
-│   │   ├── env.js               # Variables de entorno validadas
+│   │   ├── env.js               # Variables de entorno
 │   │   ├── cloudinary.js        # Configuración de Cloudinary
-│   │   ├── upload.js            # Configuración de Multer (imagen, presentacion, documento)
-│   │   └── firebaseServiceAccount.js  # Credenciales Firebase desde .env
+│   │   ├── upload.js            # Multer (imagen, presentación, documento)
+│   │   └── firebaseServiceAccount.js  # Credenciales Firebase
 │   ├── lib/
-│   │   ├── prisma.js            # Cliente Prisma con driver adapter PrismaPg
-│   │   └── prismaErrors.js      # Mapeo de errores Prisma a HTTP
+│   │   ├── prisma.js            # Cliente Prisma (PrismaPg adapter)
+│   │   └── prismaErrors.js      # Mapeo de errores Prisma → HTTP
 │   ├── services/
-│   │   ├── cliente.service.js   # Lógica CRUD de clientes
-│   │   └── evento.service.js    # Lógica CRUD de eventos
+│   │   ├── cliente.service.js   # CRUD clientes
+│   │   └── evento.service.js    # CRUD eventos
 │   ├── controllers/
-│   │   ├── auth.controller.js   # Autenticación (login, verify, logout)
+│   │   ├── auth.controller.js   # Login, verify, logout
 │   │   ├── cliente.controller.js# CRUD clientes
 │   │   ├── evento.controller.js # CRUD eventos
 │   │   ├── health.controller.js # Health check
-│   │   └── upload.controller.js # Subida de archivos a Cloudinary
+│   │   └── upload.controller.js # Subida de archivos
 │   ├── middlewares/
-│   │   ├── auth.middleware.js   # verifyAdmin (JWT verify + role)
+│   │   ├── authenticate.middleware.js  # JWT desde cookie
+│   │   ├── authorize.middleware.js     # Control de roles
 │   │   ├── errorHandler.middleware.js  # Manejador global de errores
-│   │   ├── index.js             # Barrel export (errorHandler, notFoundHandler)
+│   │   ├── index.js             # Barrel export
 │   │   ├── notFound.middleware.js  # Manejador 404
-│   │   ├── upload.middleware.js # Middleware Multer (CloudinaryStorage)
-│   │   └── validate.middleware.js  # Validación con express-validator
+│   │   ├── upload.middleware.js # Multer (imagenPonente, presentacion, documento, computeVersion)
+│   │   └── validateInputs.middleware.js  # Validación express-validator
 │   ├── routes/
-│   │   ├── auth.routes.js       # POST login, GET verify, POST logout
-│   │   ├── cliente.routes.js    # CRUD /api/v1/clientes
-│   │   ├── evento.routes.js     # CRUD /api/v1/eventos
-│   │   ├── health.routes.js     # GET /api/v1/health
-│   │   ├── upload.route.js      # POST /api/v1/upload (admin)
-│   │   └── index.js             # Barrel export de routers
+│   │   ├── auth.routes.js       # /auth (login, verify, logout)
+│   │   ├── cliente.routes.js    # /clientes CRUD (admin)
+│   │   ├── evento.routes.js     # /eventos CRUD (admin)
+│   │   ├── health.routes.js     # /health
+│   │   ├── upload.route.js      # /upload (3 endpoints, admin)
+│   │   └── index.js             # Barrel export
 │   └── validations/
+│       ├── auth.validation.js   # Validaciones de auth
+│       ├── cliente.validation.js# Validaciones de cliente
+│       ├── evento.validation.js # Validaciones de evento
+│       ├── upload.validation.js # Validaciones de upload
 │       ├── user.validation.js   # Validaciones de usuario
 │       └── validationChains.js  # [LEGACY] MikroORM — no modificar
 ├── .env.example
 ├── .gitignore
 ├── jsconfig.json
 ├── package.json
-├── postman_collection.json
-├── README.md
 ├── AGENTS.md
 └── PLAN-DE-DESARROLLO.md
 ```
@@ -191,13 +192,13 @@ proyectoTripulacionesBackend/
 { "ok": true, "data": { ... } }
 
 // Error
-{ "ok": false, "msg": "...", "error": [{},{},"..."] }
+{ "ok": false, "message": "..." }
 
 // Errores de validación
 {
   "ok": false,
   "message": "Error de validación",
-  "details": [{ "path": "...", "type": "field", "title": "...", "detail": "..." }]
+  "errors": { "campo": { "msg": "...", ... } }
 }
 ```
 
@@ -211,13 +212,15 @@ proyectoTripulacionesBackend/
 3. Frontend → Backend: `POST /api/v1/auth/login` con `Authorization: Bearer <firebaseIdToken>`
 4. Backend: Verifica el token con `admin.auth().verifyIdToken(firebaseToken)`
 5. Backend: Extrae `uid`, `name`, `email` del token decodificado
-6. Backend: Genera un JWT propio con `jwt.sign(payload, secret, { expiresIn: '7d' })`
-7. Backend: Guarda el JWT en cookie httpOnly (`res.cookie('token', token, { httpOnly: true, ... })`)
-8. Backend: Responde con `{ ok: true, user: { userId, name, email, role } }`
+6. Backend: Genera JWT propio con `jwt.sign(payload, secret, { expiresIn: '7d' })`
+7. Backend: Guarda JWT en cookie httpOnly (`res.cookie('token', token, { httpOnly: true, ... })`)
+8. Backend: Responde con `{ ok: true, user: { userId, name, email, role: 'admin' } }`
 
-### auth.middleware.js
-- **`verifyAdmin`**: Extrae token del header `Authorization: Bearer <token>`, verifica con `jwt.verify`, comprueba rol `'admin'`. Responde 401 si falta token o es inválido.
-- `authenticate` y `authorize`: comentados, pendientes de migrar a Firebase Admin SDK.
+### authenticate.middleware.js
+- **`authenticate`**: Lee `req.cookies.token`, verifica con `jwt.verify`, adjunta `req.user`. 401 si falta/inválido.
+
+### authorize.middleware.js
+- **`authorize(...roles)`**: Verifica `req.user.role` en roles permitidos. 403 si no autorizado.
 
 ### src/config/env.js
 - Valida `API_URL_BASE` como requerida.
@@ -228,70 +231,59 @@ proyectoTripulacionesBackend/
 ## 7. MAPEO DE ENDPOINTS (implementados)
 
 ### Autenticación
-| Método | Endpoint | Controlador | Auth | Descripción |
-|--------|----------|-------------|------|-------------|
-| POST | `/api/v1/auth/login` | auth.controller | - | Firebase ID token → JWT en cookie |
-| GET | `/api/v1/auth/verify` | auth.controller | - | Verifica cookie JWT, devuelve usuario |
+| Método | Endpoint | Controlador | Middlewares | Descripción |
+|--------|----------|-------------|-------------|-------------|
+| POST | `/api/v1/auth/login` | auth.controller | loginValidation, validateInputs | Firebase ID token → JWT en cookie |
+| GET | `/api/v1/auth/verify` | auth.controller | authenticate | Verifica cookie JWT, devuelve usuario |
 | POST | `/api/v1/auth/logout` | auth.controller | - | Limpia cookie JWT |
 
 ### Health Check
-| Método | Endpoint | Controlador | Auth | Descripción |
-|--------|----------|-------------|------|-------------|
-| GET | `/api/v1/health` | health.controller | - | Health check del servidor |
+| Método | Endpoint | Controlador | Middlewares | Descripción |
+|--------|----------|-------------|-------------|-------------|
+| GET | `/api/v1/health` | health.controller | - | Health check |
 
-### Upload
-| Método | Endpoint | Controlador | Auth | Descripción |
-|--------|----------|-------------|------|-------------|
-| POST | `/api/v1/upload/ponente/imagen` | upload.controller | verifyAdmin | Subir imagen de perfil de ponente (jpg, jpeg, png, gif) |
-| POST | `/api/v1/upload/ponente/presentacion` | upload.controller | verifyAdmin + computeVersion | Subir presentación de ponente (pdf, ppt, pptx), versionado automático |
-| POST | `/api/v1/upload/documento` | upload.controller | verifyAdmin | Subir documento genérico (pdf, ppt, pptx, doc, docx) |
+### Upload (admin)
+| Método | Endpoint | Controlador | Middlewares | Descripción |
+|--------|----------|-------------|-------------|-------------|
+| POST | `/api/v1/upload/ponente/imagen` | upload.controller | authenticate, authorize(admin), imagenPonenteValidation, validateInputs, imagenPonente | Subir imagen de ponente (jpg, jpeg, png, gif) |
+| POST | `/api/v1/upload/ponente/presentacion` | upload.controller | authenticate, authorize(admin), presentacionValidation, validateInputs, computeVersion, presentacion | Subir presentación versionada (pdf, ppt, pptx) |
+| POST | `/api/v1/upload/documento` | upload.controller | authenticate, authorize(admin), documento | Subir documento genérico (pdf, ppt, pptx, doc, docx) |
 
-### Clientes
-| Método | Endpoint | Controlador | Auth | Descripción |
-|--------|----------|-------------|------|-------------|
-| GET | `/api/v1/clientes` | cliente.controller | - | Listar todos los clientes |
-| GET | `/api/v1/clientes/:id` | cliente.controller | - | Obtener cliente por ID (UUID v7) |
-| POST | `/api/v1/clientes` | cliente.controller | - | Crear cliente (body: nombre, correo) |
-| PATCH | `/api/v1/clientes/:id` | cliente.controller | - | Actualizar parcialmente un cliente |
-| DELETE | `/api/v1/clientes/:id` | cliente.controller | - | Eliminar cliente |
+### Clientes (admin)
+| Método | Endpoint | Controlador | Middlewares | Descripción |
+|--------|----------|-------------|-------------|-------------|
+| GET | `/api/v1/clientes` | cliente.controller | authenticate, authorize(admin) | Listar clientes |
+| GET | `/api/v1/clientes/:id` | cliente.controller | authenticate, authorize(admin), clienteIdValidation, validateInputs | Obtener cliente por ID |
+| POST | `/api/v1/clientes` | cliente.controller | authenticate, authorize(admin), createClienteValidation, validateInputs | Crear cliente |
+| PATCH | `/api/v1/clientes/:id` | cliente.controller | authenticate, authorize(admin), clienteIdValidation, updateClienteValidation, validateInputs | Actualizar cliente |
+| DELETE | `/api/v1/clientes/:id` | cliente.controller | authenticate, authorize(admin), clienteIdValidation, validateInputs | Eliminar cliente |
 
-### Eventos
-| Método | Endpoint | Controlador | Auth | Descripción |
-|--------|----------|-------------|------|-------------|
-| GET | `/api/v1/eventos` | evento.controller | - | Listar todos los eventos |
-| GET | `/api/v1/eventos/:id` | evento.controller | - | Obtener evento por ID (UUID v7) |
-| POST | `/api/v1/eventos` | evento.controller | - | Crear evento (body: nombre, clienteId) |
-| PATCH | `/api/v1/eventos/:id` | evento.controller | - | Actualizar parcialmente un evento |
-| DELETE | `/api/v1/eventos/:id` | evento.controller | - | Eliminar evento |
+### Eventos (admin)
+| Método | Endpoint | Controlador | Middlewares | Descripción |
+|--------|----------|-------------|-------------|-------------|
+| GET | `/api/v1/eventos` | evento.controller | authenticate, authorize(admin) | Listar eventos |
+| GET | `/api/v1/eventos/:id` | evento.controller | authenticate, authorize(admin), eventoIdValidation, validateInputs | Obtener evento por ID |
+| POST | `/api/v1/eventos` | evento.controller | authenticate, authorize(admin), createEventoValidation, validateInputs | Crear evento |
+| PATCH | `/api/v1/eventos/:id` | evento.controller | authenticate, authorize(admin), eventoIdValidation, updateEventoValidation, validateInputs | Actualizar evento |
+| DELETE | `/api/v1/eventos/:id` | evento.controller | authenticate, authorize(admin), eventoIdValidation, validateInputs | Eliminar evento |
 
 ---
 
 ## 8. MODELO DE DATOS (Prisma)
 
-Schema modularizado en `src/models/`:
-
-### src/models/config.prisma
-```prisma
-generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
-}
-
-datasource db {
-  provider = "postgresql"
-}
-```
+10 archivos `.prisma` en `src/models/`. Columnas en `snake_case` con `@map()`, código en `camelCase`.
 
 ### src/models/clientes.prisma
 ```prisma
 model Cliente {
-  id        String   @id @default(uuid(7)) @db.Uuid
-  nombre    String
-  correo    String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  eventos   Evento[]
-
+  id_cliente String   @id @default(uuid(7)) @db.Uuid @map("id_cliente")
+  cliente    String   @map("cliente")
+  email      String   @unique @map("email")
+  telefono   String?  @map("telefono")
+  empresa    String?  @map("empresa")
+  sector     String?  @map("sector")
+  ciudad     String?  @map("ciudad")
+  eventos    Evento[]
   @@map("clientes")
 }
 ```
@@ -299,84 +291,93 @@ model Cliente {
 ### src/models/eventos.prisma
 ```prisma
 model Evento {
-  id          String   @id @default(uuid(7)) @db.Uuid
-  nombre      String
-  descripcion String?
-  completado  Boolean  @default(false)
-  clienteId   String   @db.Uuid
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  cliente     Cliente  @relation(fields: [clienteId], references: [id])
-
+  id_evento      String    @id @default(uuid(7)) @db.Uuid @map("id_evento")
+  nombreEvento   String    @map("nombre_evento")
+  ciudad         String?   @map("ciudad")
+  lugarConfirmado Boolean   @default(false) @map("lugar_confirmado")
+  fechaInicio    DateTime? @map("fecha_inicio")
+  fechaFin       DateTime? @map("fecha_fin")
+  numeroPersonas Int?      @map("numero_personas")
+  tipoEvento     String?   @map("tipo_evento")
+  nota           String?   @map("nota")
+  presupuestoId  String?   @unique @db.Uuid @map("presupuesto_id")
+  presupuesto    Presupuesto? @relation(fields: [presupuestoId], references: [id_presupuesto])
+  clienteId      String    @db.Uuid @map("cliente_id")
+  cliente        Cliente   @relation(fields: [clienteId], references: [id_cliente])
+  estadoId       String    @db.Uuid @map("estado_id")
+  estado         Estado    @relation(fields: [estadoId], references: [id_estado])
+  salaId         String    @db.Uuid @map("sala_id")
+  sala           Sala      @relation(fields: [salaId], references: [id_sala])
+  eventoPonenteId String   @db.Uuid @map("evento_ponente_id")
+  eventoPonente  EventosPonente @relation(fields: [eventoPonenteId], references: [id_evento_ponente])
   @@map("eventos")
 }
 ```
 
-- IDs: **UUID v7** (`@default(uuid(7)) @db.Uuid`)
-- Tablas mapeadas a español con `@@map()`
-- Timestamps automáticos: `@default(now())` + `@updatedAt`
-- Relación: Cliente (1) → (*) Evento
-- Nuevos modelos se añaden como archivos `.prisma` en `src/models/`
+### Resto de modelos
+- **Espacio** (`espacios`): nombre, ciudad, dirección, aforo, contacto. FK a Sala.
+- **Estado** (`estados`): descripción. 1→N Eventos.
+- **EventosPonente** (`eventos_ponentes`): tabla pivote con hotel, transporte, horarios, presentación, billetes. FK a Ponente.
+- **Ponente** (`ponentes`): nombre, email, DNI, sector, teléfono, fotoLink, cvLink, empresa, cargo. 1→N EventosPonente.
+- **Presupuesto** (`presupuestos`): estado, total, fecha, ubicación, catering, audiovisuales, otros (con precios). 1→1 Evento.
+- **Sala** (`salas`): nombre, tipo, capacidad, nota. 1→N Eventos y Espacios.
+- **Usuario** (`usuarios`): nombreUsuario, rol.
 
 ---
 
 ## 9. SERVICES Y LIB
 
 ### Patrón de capa de servicio
-Los controladores de `cliente` y `evento` delegan operaciones BD a servicios:
-- `src/services/cliente.service.js`: `findClientes`, `findClienteById`, `createCliente`, `updateCliente`, `removeCliente`
-- `src/services/evento.service.js`: `findEventos`, `findEventoById`, `createEvento`, `updateEvento`, `removeEvento`
-
-Este patrón debe seguirse para cualquier nueva entidad.
+Los controladores de `cliente` y `evento` delegan a servicios:
+- `cliente.service.js`: `findClientes`, `findClienteById`, `createCliente`, `updateCliente`, `removeCliente`
+- `evento.service.js`: `findEventos`, `findEventoById`, `createEvento`, `updateEvento`, `removeEvento`
 
 ### Mapeo de errores Prisma
-- `src/lib/prismaErrors.js`: `mapPrismaError(error)` mapea códigos de error de Prisma (P2000-P2037) a HTTP status + mensajes en español.
-- Usar en todos los controladores nuevos al capturar errores de BD.
+- `src/lib/prismaErrors.js`: `mapPrismaError(error)` → HTTP status + mensajes español.
+
+### Aviso importante
+Los servicios actuales referencian campos del schema antiguo. Deben actualizarse para coincidir con los nuevos modelos (campos en español, UUID v7, nuevas relaciones).
 
 ---
 
 ## 10. REGLAS DE CODIFICACIÓN
-- **Validación:** Toda entrada de datos externa debe validarse con express-validator.
-- **Manejo de errores:** Usa `try/catch` + `next(error)`. Usa `mapPrismaError` para errores de BD.
-- **Código:** JavaScript vanilla. **PROHIBIDO TypeScript** (excepto `prisma.config.ts` y generated/output).
-- **Arquitectura:** Nuevas entidades siguen el patrón: modelo `.prisma` → servicio → controlador → rutas.
-- **Archivos de rutas:** Usar `.routes.js` (convención actual del proyecto).
-- **Idioma:** Variables, funciones, archivos en **inglés**. Comentarios y mensajes de API en **castellano**.
-- **Convenciones:**
-  - `camelCase` para funciones, variables, métodos
-  - `PascalCase` para modelos Prisma
-  - `SCREAMING_SNAKE_CASE` para constantes globales
-  - Funciones flecha obligatorias
-- **Nomenclatura de archivos:**
-  - Rutas: `entidad.routes.js`
-  - Controladores: `entidad.controller.js`
-  - Servicios: `entidad.service.js`
-  - Modelos: `entidad.prisma`
-- **Formato de respuestas:** `{ ok: true/false, data/message }`
+- **Validación:** Toda entrada externa validada con `express-validator` + `validateInputs`.
+- **Auth:** Toda ruta protegida usa `authenticate, authorize('admin')` excepto auth y health.
+- **Manejo de errores:** `try/catch` + `next(error)`. Errores Prisma con `mapPrismaError`.
+- **Código:** JavaScript vanilla. **PROHIBIDO TypeScript** (excepto `prisma.config.ts` y generated).
+- **Nuevas entidades:** Modelo `.prisma` → servicio → controlador → validaciones → rutas.
+- **Schema DB:** `camelCase` en código, `snake_case` en BD con `@map()`.
+- **Archivos de rutas:** `.routes.js` / `.route.js` (ambos en uso, unificar a `.routes.js`).
+- **Idioma:** Variables/funciones/archivos en **inglés**. Comentarios/respuestas API en **castellano**.
+- **Convenciones:** `camelCase` funciones/variables, `PascalCase` modelos, `SCREAMING_SNAKE_CASE` constantes. Funciones flecha obligatorias.
+- **Nomenclatura:** Rutas `entidad.routes.js`, controladores `entidad.controller.js`, servicios `entidad.service.js`, modelos `entidad.prisma`, validaciones `entidad.validation.js`, middlewares `nombre.middleware.js`.
+- **Formato respuestas:** `{ ok: true/false, data/message }`.
 
 ---
 
 ## 11. MIDDLEWARES
 
-### auth.middleware.js
-- **`verifyAdmin`**: Verifica JWT del header `Authorization: Bearer <token>` + comprueba rol `'admin'`.
-- `authenticate` y `authorize` comentados (pendientes).
+### authenticate.middleware.js
+- Lee `req.cookies.token`, verifica con `jwt.verify(token, jwtSecret)`, adjunta `req.user`. 401 si falta/inválido.
+
+### authorize.middleware.js
+- `authorize(...roles)`: verifica `req.user.role` en roles permitidos. 403 si no autorizado.
 
 ### upload.middleware.js
-- **`imagenPonente`**: `uploadImagenPonente.single('file')`. Carpeta: `ponentes/imagenes`. Formatos: jpg, jpeg, png, gif.
-- **`presentacion`**: `uploadPresentacion.single('file')`. Carpeta: `ponentes/presentaciones`. Formatos: pdf, ppt, pptx.
-- **`documento`**: `uploadDocumento.single('file')`. Carpeta: `documentos`. Formatos: pdf, ppt, pptx, doc, docx.
-- **`computeVersion`**: Versionador en memoria por `evento_id` + `ponente_id`. Asigna `req.customPublicId`.
-- Límite de archivo: **30 MB** (configurado en `src/config/upload.js`).
+- `imagenPonente`: `uploadImagenPonente.single('file')` → `ponentes/imagenes`, formatos imagen.
+- `presentacion`: `uploadPresentacion.single('file')` → `ponentes/presentaciones`, formatos pdf/ppt/pptx.
+- `documento`: `uploadDocumento.single('file')` → `documentos`, formatos doc.
+- `computeVersion`: versionador por `evento_id + ponente_id` en memoria. Asigna `req.customPublicId`.
+- Límite: 30 MB.
 
-### validate.middleware.js
-- `validate`: formatea errores de `express-validator`, responde 400.
+### validateInputs.middleware.js
+- `validateInputs`: formatea errores de `express-validator` con `validationResult`, responde 400.
 
 ### errorHandler.middleware.js
-- Manejador global. Stack trace en desarrollo, mensaje genérico en producción.
+- Maneja `MulterError` (400). Stack trace en dev, mensaje genérico en prod.
 
 ### notFound.middleware.js
-- Responde 404 para rutas no encontradas.
+- 404 con método y URL.
 
 ---
 
@@ -395,7 +396,7 @@ CLOUDINARY_CLOUD_NAME=
 CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET=
 
-# Firebase Admin (usadas por firebaseServiceAccount.js)
+# Firebase Admin
 FIREBASE_TYPE=
 FIREBASE_PROJECT_ID=
 FIREBASE_PRIVATE_KEY_ID=
@@ -412,16 +413,16 @@ FIREBASE_UNIVERSE_DOMAIN=
 ---
 
 ## 13. FORMATO DE SALIDA E INTERACCIÓN
-- **Código completo:** Al crear o modificar un archivo, proporciona el código completo o el contexto suficiente para evitar pérdida de lógica.
-- **Reporte de ciclo:** Al finalizar cada tarea, estructura la respuesta incluyendo un reporte TDD:
+- **Código completo:** Al crear o modificar un archivo, proporciona el código completo.
+- **Reporte de ciclo:** Al finalizar cada tarea, incluye un reporte TDD:
 
 ```markdown
-### Reporte de Desarrollo TDD: [Nombre del Endpoint/Servicio]
-- **Fase RED:** [Test inicial que fallaba y escenarios validados]
-- **Fase GREEN:** [Código de producción mínimo implementado]
-- **Fase REFACTOR:** [Mejoras de optimización aplicadas]
-- **Resultado de tests:** [Confirmación de ejecución exitosa]
+### Reporte de Desarrollo TDD: [Nombre]
+- **Fase RED:** [Test inicial y escenarios]
+- **Fase GREEN:** [Código implementado]
+- **Fase REFACTOR:** [Mejoras aplicadas]
+- **Resultado de tests:** [Ejecución exitosa]
 ```
 
 ### Nota importante sobre validationChains.js
-El archivo `src/validations/validationChains.js` contiene código legacy de otro proyecto (con imports de Mikro-ORM). No debe ser modificado ni utilizado como referencia.
+El archivo `src/validations/validationChains.js` es código legacy con imports de Mikro-ORM. No modificar ni usar como referencia.
