@@ -72,7 +72,9 @@ async function seedTable(config) {
         } else if (/^\d{4}-\d{2}-\d{2}/.test(v)) {
           entry[prismaField] = new Date(v);
         } else {
-          entry[prismaField] = new Date('2026-01-01T00:00:00');
+          const start = new Date(2025, 0, 1);
+          const end = new Date(2026, 11, 31);
+          entry[prismaField] = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
         }
       } else {
         entry[prismaField] = clean(row[csvCol]);
@@ -168,7 +170,7 @@ const tables = [
   {
     name: 'evento', file: 'eventos.csv', model: 'evento', idField: 'id_evento',
     map: {
-      id_evento: 'id_evento', nombre_evento: 'nombreEvento', ciudad: 'ciudad',
+      id_evento: 'id', nombre_evento: 'nombreEvento', ciudad: 'ciudad',
       lugar_confirmado: 'lugarConfirmado', fecha_inicio: 'fechaInicio',
       fecha_fin: 'fechaFin', numero_personas: 'numeroPersonas',
       tipo_evento: 'tipoEvento', nota: 'nota',

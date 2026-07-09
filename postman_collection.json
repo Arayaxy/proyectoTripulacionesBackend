@@ -48,14 +48,14 @@
       "name": "Eventos",
       "item": [
         { "name": "GET listar eventos", "request": { "method": "GET", "url": "{{base_url}}/eventos" } },
-        { "name": "GET filtrar eventos", "request": { "method": "GET", "url": "{{base_url}}/eventos?ciudad=Bilbao&tipo_evento=Congreso" } },
+        { "name": "GET filtrar eventos", "request": { "method": "GET", "url": "{{base_url}}/eventos?ciudad=Bilbao&tipoEvento=Congreso" } },
         { "name": "GET buscar evento por ID", "request": { "method": "GET", "url": "{{base_url}}/eventos/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6" } },
         {
           "name": "POST crear evento",
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"nombre_evento\": \"Evento de prueba\",\n  \"ciudad\": \"Bilbao\",\n  \"lugar_confirmado\": \"Palacio Europa\",\n  \"fecha_inicio\": \"2026-07-15\",\n  \"fecha_fin\": \"2026-07-17\",\n  \"numero_personas\": 200,\n  \"tipo_evento\": \"Congreso\",\n  \"nota\": \"\",\n  \"clienteId\": \"uuid-del-cliente\",\n  \"estadoId\": \"uuid-del-estado\"\n}" },
+            "body": { "mode": "raw", "raw": "{\n  \"nombreEvento\": \"Evento de prueba\",\n  \"ciudad\": \"Bilbao\",\n  \"lugarConfirmado\": \"Palacio Europa\",\n  \"fechaInicio\": \"2026-07-15\",\n  \"fechaFin\": \"2026-07-17\",\n  \"numeroPersonas\": 200,\n  \"tipoEvento\": \"Congreso\",\n  \"nota\": \"\",\n  \"idCliente\": \"uuid-del-cliente\",\n  \"idEstado\": \"uuid-del-estado\"\n}" },
             "url": "{{base_url}}/eventos"
           }
         },
@@ -64,7 +64,7 @@
           "request": {
             "method": "PATCH",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"nombre_evento\": \"Evento actualizado\",\n  \"numero_personas\": 250\n}" },
+            "body": { "mode": "raw", "raw": "{\n  \"nombreEvento\": \"Evento actualizado\",\n  \"numeroPersonas\": 250\n}" },
             "url": "{{base_url}}/eventos/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
           }
         },
@@ -110,7 +110,7 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"nombre_espacio\": \"Espacio de prueba\",\n  \"ciudad\": \"Bilbao\",\n  \"direccion\": \"Calle Principal 1\",\n  \"aforo\": \"500\",\n  \"nota\": \"\",\n  \"telefono_contacto\": \"944123456\",\n  \"nombre_contacto\": \"Contacto\",\n  \"email_contacto\": \"contacto@espacio.com\"\n}" },
+            "body": { "mode": "raw", "raw": "{\n  \"nombreEspacio\": \"Espacio de prueba\",\n  \"ciudad\": \"Bilbao\",\n  \"direccion\": \"Calle Principal 1\",\n  \"aforo\": 500,\n  \"nota\": \"\",\n  \"telefonoContacto\": \"944123456\",\n  \"nombreContacto\": \"Contacto\",\n  \"emailContacto\": \"contacto@espacio.com\"\n}" },
             "url": "{{base_url}}/espacios"
           }
         },
@@ -119,7 +119,7 @@
           "request": {
             "method": "PATCH",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"nombre_espacio\": \"Espacio actualizado\",\n  \"aforo\": \"1000\"\n}" },
+            "body": { "mode": "raw", "raw": "{\n  \"nombreEspacio\": \"Espacio actualizado\",\n  \"aforo\": 1000\n}" },
             "url": "{{base_url}}/espacios/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
           }
         },
@@ -139,8 +139,8 @@
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "nombre_ponente", "value": "Ponente de prueba", "type": "text" },
-                { "key": "docu_identificacion", "value": "12345678A", "type": "text" },
+                { "key": "nombrePonente", "value": "Ponente de prueba", "type": "text" },
+                { "key": "docuIdentificacion", "value": "12345678A", "type": "text" },
                 { "key": "email", "value": "ponente@test.com", "type": "text" },
                 { "key": "sector", "value": "Tecnologia", "type": "text" },
                 { "key": "telefono", "value": "944123456", "type": "text" },
@@ -159,7 +159,7 @@
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "nombre_ponente", "value": "Ponente actualizado", "type": "text" },
+                { "key": "nombrePonente", "value": "Ponente actualizado", "type": "text" },
                 { "key": "cargo", "value": "Director Senior", "type": "text" },
                 { "key": "file", "type": "file", "src": "" }
               ]

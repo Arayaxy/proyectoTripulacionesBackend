@@ -19,7 +19,7 @@ export const eventoRouter = Router();
 
 eventoRouter.get('/', [
   query('ciudad').optional().isString(),
-  query('tipo_evento').optional().isString(),
+  query('tipoEvento').optional().isString(),
   validate
 ], getEventos);
 
@@ -29,16 +29,16 @@ eventoRouter.get('/:id', [
 ], getEvento);
 
 eventoRouter.post('/', [
-  body('nombre_evento').notEmpty(),
-  body('clienteId').isUUID(),
-  body('estadoId').isUUID(),
+  body('nombreEvento').notEmpty(),
+  body('idCliente').isUUID(),
+  body('idEstado').isUUID(),
   validate
 ], postEvento);
 
 eventoRouter.patch('/:id', [
   param('id').isUUID(),
-  body('clienteId').optional().isUUID(),
-  body('estadoId').optional().isUUID(),
+  body('idCliente').optional().isUUID(),
+  body('idEstado').optional().isUUID(),
   validate
 ], patchEvento);
 

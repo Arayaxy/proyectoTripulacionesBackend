@@ -26,7 +26,6 @@ espacioRouter.get('/buscar', [
 
 espacioRouter.get('/', [
   query('ciudad').optional().isString(),
-  query('aforo').optional().isInt({ min: 0 }),
   validate
 ], getEspacios);
 
@@ -36,7 +35,7 @@ espacioRouter.get('/:id', [
 ], getEspacio);
 
 espacioRouter.post('/', [
-  body('nombre_espacio').notEmpty(),
+  body('nombreEspacio').notEmpty(),
   validate
 ], postEspacio);
 

@@ -29,7 +29,7 @@ ponenteRouter.get('/:id', [
 ], getPonente);
 
 ponenteRouter.post('/', uploadFile, [
-  body('nombre_ponente').notEmpty(),
+  body('nombrePonente').notEmpty(),
   body('email').isEmail(),
   validate
 ], postPonente);

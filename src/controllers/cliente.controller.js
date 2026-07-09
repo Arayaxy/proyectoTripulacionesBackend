@@ -8,8 +8,8 @@ export const getClientes = async (req, res, next) => {
     if (sector || ciudad) {
       const conditions = [];
       const params = [];
-      if (sector) { conditions.push(`unaccent(c.sector) ILIKE unaccent($${params.length + 1})`); params.push(`%${sector}%`); }
-      if (ciudad) { conditions.push(`unaccent(c.ciudad) ILIKE unaccent($${params.length + 1})`); params.push(`%${ciudad}%`); }
+      if (sector) { conditions.push(`c.sector ILIKE $${params.length + 1}`); params.push(`%${sector}%`); }
+      if (ciudad) { conditions.push(`c.ciudad ILIKE $${params.length + 1}`); params.push(`%${ciudad}%`); }
       clientes = await prisma.$queryRawUnsafe(
         `SELECT c.* FROM clientes c WHERE ${conditions.join(' AND ')}`,
         ...params
@@ -26,7 +26,7 @@ export const getClientes = async (req, res, next) => {
 
 export const getCliente = async (req, res, next) => {
   try {
-    const cliente = await prisma.cliente.findUnique({ where: { id_cliente: req.params.id } });
+    const cliente = await prisma.cliente.findUnique({ where: { id: req.params.id } });
 
     if (!cliente)
       return res.status(404).json({ ok: false, message: 'Cliente no encontrado', error: [{ type: 'not_found', title: 'Cliente no encontrado', detail: 'No existe un cliente con ese ID' }] });
@@ -63,12 +63,12 @@ export const patchCliente = async (req, res, next) => {
   try {
     const { cliente, email, telefono, empresa, sector, ciudad } = req.body;
 
-    const exists = await prisma.cliente.findUnique({ where: { id_cliente: req.params.id } });
+    const exists = await prisma.cliente.findUnique({ where: { id: req.params.id } });
     if (!exists)
       return res.status(404).json({ ok: false, message: 'Cliente no encontrado', error: [{ type: 'not_found', title: 'Cliente no encontrado', detail: 'No existe un cliente con ese ID' }] });
 
     const actualizado = await prisma.cliente.update({
-      where: { id_cliente: req.params.id },
+      where: { id: req.params.id },
       data: {
         cliente, email,
         telefono: telefono || '',
@@ -88,11 +88,11 @@ export const patchCliente = async (req, res, next) => {
 
 export const deleteCliente = async (req, res, next) => {
   try {
-    const exists = await prisma.cliente.findUnique({ where: { id_cliente: req.params.id } });
+    const exists = await prisma.cliente.findUnique({ where: { id: req.params.id } });
     if (!exists)
       return res.status(404).json({ ok: false, message: 'Cliente no encontrado', error: [{ type: 'not_found', title: 'Cliente no encontrado', detail: 'No existe un cliente con ese ID' }] });
 
-    await prisma.cliente.delete({ where: { id_cliente: req.params.id } });
+    await prisma.cliente.delete({ where: { id: req.params.id } });
 
     res.status(200).json({ ok: true, message: 'Cliente eliminado correctamente' });
   } catch (error) {
