@@ -1,19 +1,19 @@
 model Presupuesto {
-  id_presupuesto      String   @id @default(uuid(7)) @db.Uuid
+  id                  String   @id @default(uuid(7)) @db.Uuid
   estadoPresupuesto   Boolean  @map("estado_presupuesto")
-  total               Int
+  total               Float
   fecha               DateTime
   notaUbicacion       String   @map("nota_ubicacion")
-  precioUbicacion     Int      @map("precio_ubicacion")
+  precioUbicacion     Float    @map("precio_ubicacion")
   catering            Boolean
   notaCatering        String   @map("nota_catering")
-  precioCatering      Int      @map("precio_catering")
+  precioCatering      Float    @map("precio_catering")
   audiovisuales       Boolean
   notaAudiovisuales   String   @map("nota_audiovisuales")
-  precioAudiovisuales Int      @map("precio_audiovisuales")
+  precioAudiovisuales Float    @map("precio_audiovisuales")
   otros               Boolean
   notaOtros           String   @map("nota_otros")
-  precioOtros         Int      @map("precio_otros")
+  precioOtros         Float    @map("precio_otros")
   observaciones       String
   evento              Evento?
 

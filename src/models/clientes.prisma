@@ -1,12 +1,12 @@
 model Cliente {
-  id_cliente String   @id @default(uuid(7)) @db.Uuid
-  cliente    String
-  email      String   @unique
-  telefono   String
-  empresa    String
-  sector     String
-  ciudad     String
-  eventos    Evento[] // Relación: Un cliente puede tener muchos eventos
+  id       String   @id @default(uuid(7)) @db.Uuid
+  cliente  String
+  email    String   @unique
+  telefono String
+  empresa  String
+  sector   String
+  ciudad   String
+  eventos  Evento[] // Relación: Un cliente puede tener muchos eventos
 
   @@map("clientes")
 }

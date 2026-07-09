@@ -1,5 +1,5 @@
-model EventosPonente {
-  id_evento_ponente       String   @id @default(uuid(7)) @db.Uuid
+model Ponencia {
+  id                      String   @id @default(uuid(7)) @db.Uuid
   nombreHotel             String   @map("nombre_hotel")
   notaTransporte          String   @map("nota_transporte")
   horarioIdaTransporte    DateTime @map("horario_ida_transporte")
@@ -13,8 +13,8 @@ model EventosPonente {
   billeteVueltaLink       String   @map("billete_vuelta_link")
   tipoPonencia            String   @map("tipo_ponencia")
   eventos                 Evento[]
-  ponenteId               String   @map("id_ponente") @db.Uuid
-  ponente                 Ponente  @relation(fields: [ponenteId], references: [id_ponente]) // Enlace de clave foránea
+  idPonente               String   @map("id_ponente") @db.Uuid
+  ponente                 Ponente  @relation(fields: [idPonente], references: [id]) // Enlace de clave foránea
 
-  @@map("eventos_ponentes")
+  @@map("ponencias")
 }

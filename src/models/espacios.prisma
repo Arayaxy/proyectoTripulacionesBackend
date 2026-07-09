@@ -1,5 +1,5 @@
 model Espacio {
-  id_espacio       String @id @default(uuid(7)) @db.Uuid
+  id               String @id @default(uuid(7)) @db.Uuid
   nombreEspacio    String @map("nombre_espacio")
   ciudad           String
   direccion        String
@@ -8,8 +8,7 @@ model Espacio {
   telefonoContacto String @map("telefono_contacto")
   nombreContacto   String @map("nombre_contacto")
   emailContacto    String @map("email_contacto")
-  salaId           String @map("id_sala") @db.Uuid
-  sala             Sala   @relation(fields: [salaId], references: [id_sala]) // Enlace de clave foránea
+  salas            Sala[]
 
   @@map("espacios")
 }
