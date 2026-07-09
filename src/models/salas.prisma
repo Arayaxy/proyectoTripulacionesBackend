@@ -1,12 +1,12 @@
 model Sala {
-  id_sala            String    @id @default(uuid(7)) @db.Uuid
-  nombre_sala        String
-  tipo_sala          String
-  capacidad_max_sala String
-  nota_sala          String
-  espacioId          String    @db.Uuid
-  espacio            Espacio   @relation(fields: [espacioId], references: [id_espacio])
-  eventos            Evento[]
+  id               String   @id @default(uuid(7)) @db.Uuid
+  nombreSala       String   @map("nombre_sala")
+  tipoSala         String   @map("tipo_sala")
+  capacidadMaxSala Int      @map("capacidad_max_sala")
+  notaSala         String   @map("nota_sala")
+  eventos          Evento[]
+  idEspacio        String   @map("id_espacio") @db.Uuid
+  espacio          Espacio  @relation(fields: [idEspacio], references: [id]) // Enlace de clave foránea
 
   @@map("salas")
 }

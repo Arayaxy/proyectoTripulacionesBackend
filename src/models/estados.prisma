@@ -1,5 +1,5 @@
 model Estado {
-  id_estado   String   @id @default(uuid(7)) @db.Uuid
+  id          String   @id @default(uuid(7)) @db.Uuid
   descripcion String
   eventos     Evento[]
 

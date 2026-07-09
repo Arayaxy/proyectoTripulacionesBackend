@@ -1,14 +1,14 @@
 model Espacio {
-  id_espacio        String @id @default(uuid(7)) @db.Uuid
-  nombre_espacio    String
-  ciudad            String
-  direccion         String
-  aforo             String
-  nota              String
-  telefono_contacto String
-  nombre_contacto   String
-  email_contacto    String
-  salas             Sala[]
+  id               String @id @default(uuid(7)) @db.Uuid
+  nombreEspacio    String @map("nombre_espacio")
+  ciudad           String
+  direccion        String
+  aforo            Int
+  nota             String
+  telefonoContacto String @map("telefono_contacto")
+  nombreContacto   String @map("nombre_contacto")
+  emailContacto    String @map("email_contacto")
+  salas            Sala[]
 
   @@map("espacios")
 }
