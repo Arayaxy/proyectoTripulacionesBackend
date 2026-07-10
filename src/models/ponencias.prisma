@@ -12,7 +12,8 @@ model Ponencia {
   billeteIdaLink          String?  @map("billete_ida_link")
   billeteVueltaLink       String?  @map("billete_vuelta_link")
   tipoPonencia            String   @map("tipo_ponencia")
-  eventos                 Evento[]
+  idEvento                String?  @map("id_evento") @db.Uuid
+  evento                  Evento?  @relation(fields: [idEvento], references: [id]) // Enlace de clave foránea
   idPonente               String   @map("id_ponente") @db.Uuid
   ponente                 Ponente  @relation(fields: [idPonente], references: [id]) // Enlace de clave foránea
 

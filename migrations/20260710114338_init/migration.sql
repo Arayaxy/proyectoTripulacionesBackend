@@ -49,7 +49,6 @@ CREATE TABLE "eventos" (
     "id_cliente" UUID NOT NULL,
     "id_estado" UUID NOT NULL,
     "id_sala" UUID,
-    "id_ponencia" UUID,
 
     CONSTRAINT "eventos_pkey" PRIMARY KEY ("id")
 );
@@ -69,6 +68,7 @@ CREATE TABLE "ponencias" (
     "billete_ida_link" TEXT,
     "billete_vuelta_link" TEXT,
     "tipo_ponencia" TEXT NOT NULL,
+    "id_evento" UUID,
     "id_ponente" UUID NOT NULL,
 
     CONSTRAINT "ponencias_pkey" PRIMARY KEY ("id")
@@ -155,7 +155,7 @@ ALTER TABLE "eventos" ADD CONSTRAINT "eventos_id_estado_fkey" FOREIGN KEY ("id_e
 ALTER TABLE "eventos" ADD CONSTRAINT "eventos_id_sala_fkey" FOREIGN KEY ("id_sala") REFERENCES "salas"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "eventos" ADD CONSTRAINT "eventos_id_ponencia_fkey" FOREIGN KEY ("id_ponencia") REFERENCES "ponencias"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "ponencias" ADD CONSTRAINT "ponencias_id_evento_fkey" FOREIGN KEY ("id_evento") REFERENCES "eventos"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ponencias" ADD CONSTRAINT "ponencias_id_ponente_fkey" FOREIGN KEY ("id_ponente") REFERENCES "ponentes"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
