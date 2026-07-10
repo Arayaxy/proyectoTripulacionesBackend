@@ -223,6 +223,85 @@
         },
         { "name": "DELETE eliminar ponencia", "request": { "method": "DELETE", "url": "{{base_url}}/ponencias/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6" } }
       ]
+    },
+    {
+      "name": "Estados",
+      "item": [
+        { "name": "GET listar estados", "request": { "method": "GET", "url": "{{base_url}}/estados" } },
+        { "name": "GET buscar estado por ID", "request": { "method": "GET", "url": "{{base_url}}/estados/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6" } },
+        {
+          "name": "POST crear estado",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"descripcion\": \"Planificado\"\n}" },
+            "url": "{{base_url}}/estados"
+          }
+        },
+        {
+          "name": "PATCH actualizar estado",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"descripcion\": \"En progreso\"\n}" },
+            "url": "{{base_url}}/estados/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
+          }
+        },
+        { "name": "DELETE eliminar estado", "request": { "method": "DELETE", "url": "{{base_url}}/estados/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6" } }
+      ]
+    },
+    {
+      "name": "Usuarios",
+      "item": [
+        { "name": "GET listar usuarios", "request": { "method": "GET", "url": "{{base_url}}/usuarios" } },
+        { "name": "GET buscar usuario por ID", "request": { "method": "GET", "url": "{{base_url}}/usuarios/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6" } },
+        {
+          "name": "POST crear usuario",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"nombreUsuario\": \"Admin\",\n  \"rol\": \"admin\"\n}" },
+            "url": "{{base_url}}/usuarios"
+          }
+        },
+        {
+          "name": "PATCH actualizar usuario",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"nombreUsuario\": \"Admin Modificado\"\n}" },
+            "url": "{{base_url}}/usuarios/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
+          }
+        },
+        { "name": "DELETE eliminar usuario", "request": { "method": "DELETE", "url": "{{base_url}}/usuarios/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6" } }
+      ]
+    },
+    {
+      "name": "Presupuestos",
+      "item": [
+        { "name": "GET listar presupuestos", "request": { "method": "GET", "url": "{{base_url}}/presupuestos" } },
+        { "name": "GET filtrar presupuestos por estado", "request": { "method": "GET", "url": "{{base_url}}/presupuestos?estadoPresupuesto=true" } },
+        { "name": "GET buscar presupuesto por ID", "request": { "method": "GET", "url": "{{base_url}}/presupuestos/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6" } },
+        {
+          "name": "POST crear presupuesto",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"estadoPresupuesto\": true,\n  \"total\": 15000,\n  \"catering\": true,\n  \"precioCatering\": 3000,\n  \"audiovisuales\": false,\n  \"precioAudiovisuales\": 0,\n  \"otros\": false,\n  \"precioOtros\": 0\n}" },
+            "url": "{{base_url}}/presupuestos"
+          }
+        },
+        {
+          "name": "PATCH actualizar presupuesto",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"total\": 18000,\n  \"catering\": false,\n  \"precioCatering\": 0\n}" },
+            "url": "{{base_url}}/presupuestos/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
+          }
+        },
+        { "name": "DELETE eliminar presupuesto", "request": { "method": "DELETE", "url": "{{base_url}}/presupuestos/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6" } }
+      ]
     }
   ]
 }
