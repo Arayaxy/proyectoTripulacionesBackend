@@ -31,19 +31,7 @@
         { "name": "POST Logout", "request": { "method": "POST", "url": "{{base_url}}/auth/logout" } }
       ]
     },
-    {
-      "name": "Upload",
-      "item": [
-        {
-          "name": "POST subir archivo",
-          "request": {
-            "method": "POST",
-            "body": { "mode": "formdata", "formdata": [{ "key": "file", "type": "file", "src": "" }] },
-            "url": "{{base_url}}/upload"
-          }
-        }
-      ]
-    },
+
     {
       "name": "Eventos",
       "item": [
@@ -55,7 +43,7 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"nombreEvento\": \"Evento de prueba\",\n  \"ciudad\": \"Bilbao\",\n  \"lugarConfirmado\": \"Palacio Europa\",\n  \"fechaInicio\": \"2026-07-15\",\n  \"fechaFin\": \"2026-07-17\",\n  \"numeroPersonas\": 200,\n  \"tipoEvento\": \"Congreso\",\n  \"nota\": \"\",\n  \"idCliente\": \"uuid-del-cliente\",\n  \"idEstado\": \"uuid-del-estado\"\n}" },
+            "body": { "mode": "raw", "raw": "{\n  \"nombreEvento\": \"Evento de prueba\",\n  \"ciudad\": \"Bilbao\",\n  \"lugarConfirmado\": true,\n  \"fechaInicio\": \"2026-07-15\",\n  \"fechaFin\": \"2026-07-17\",\n  \"numeroPersonas\": 200,\n  \"tipoEvento\": \"Congreso\",\n  \"nota\": \"\",\n  \"idCliente\": \"uuid-del-cliente\",\n  \"idEstado\": \"uuid-del-estado\"\n}" },
             "url": "{{base_url}}/eventos"
           }
         },
@@ -287,7 +275,7 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"estadoPresupuesto\": true,\n  \"total\": 15000,\n  \"catering\": true,\n  \"precioCatering\": 3000,\n  \"audiovisuales\": false,\n  \"precioAudiovisuales\": 0,\n  \"otros\": false,\n  \"precioOtros\": 0\n}" },
+            "body": { "mode": "raw", "raw": "{\n  \"estadoPresupuesto\": true,\n  \"total\": 15000,\n  \"precioUbicacion\": 5000,\n  \"catering\": true,\n  \"precioCatering\": 3000,\n  \"audiovisuales\": false,\n  \"precioAudiovisuales\": 0,\n  \"otros\": false,\n  \"precioOtros\": 0\n}" },
             "url": "{{base_url}}/presupuestos"
           }
         },

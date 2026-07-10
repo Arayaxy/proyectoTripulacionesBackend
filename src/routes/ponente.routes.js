@@ -7,8 +7,6 @@ import {
   createPonenteValidation,
   updatePonenteValidation,
 } from '../validations/ponente.validation.js';
-import { imagenPonente as uploadFile } from '../middlewares/upload.middleware.js';
-
 import {
   getPonentes,
   getPonente,
@@ -23,6 +21,6 @@ ponenteRouter.use(authenticate, authorize('admin'));
 
 ponenteRouter.get('/', getPonentes);
 ponenteRouter.get('/:id', ponenteIdValidation, validateInputs, getPonente);
-ponenteRouter.post('/', uploadFile, createPonenteValidation, validateInputs, postPonente);
-ponenteRouter.patch('/:id', uploadFile, ponenteIdValidation, updatePonenteValidation, validateInputs, patchPonente);
+ponenteRouter.post('/', createPonenteValidation, validateInputs, postPonente);
+ponenteRouter.patch('/:id', ponenteIdValidation, updatePonenteValidation, validateInputs, patchPonente);
 ponenteRouter.delete('/:id', ponenteIdValidation, validateInputs, deletePonente);

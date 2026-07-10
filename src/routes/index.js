@@ -9,4 +9,3 @@ export { ponenciaRouter } from './ponencia.routes.js';
 export { estadoRouter } from './estado.routes.js';
 export { usuarioRouter } from './usuario.routes.js';
 export { presupuestoRouter } from './presupuesto.routes.js';
-export { uploadRouter } from './upload.route.js';
