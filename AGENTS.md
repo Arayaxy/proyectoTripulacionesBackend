@@ -69,19 +69,33 @@
 
 ```txt
 proyectoTripulacionesBackend/
-├── prisma.config.ts · vercel.json
-├── migrations/ · src/generated/prisma/
-└── src/
+├── package.json
+├── vercel.json
+├── prisma.config.ts
+├── jsconfig.json
+├── openapi.yaml
+├── postman_collection.json
+├── redeploy
+├── .env / .env.example / .gitignore
+├── README.md / PLAN-DE-DESARROLLO.md / AGENTS.md
+├── migrations/
+│   └── 20260709090031_init/
+├── src/
     ├── app.js
-    ├── models/        (10 .prisma: clientes, config, espacios, estados, eventos,
-    │                   ponencias, ponentes, presupuestos, salas, usuarios)
-    ├── config/        (env, cloudinary, upload, firebaseServiceAccount)
-    ├── lib/           (prisma, prismaErrors)
-    ├── services/      (cliente, evento)
-    ├── controllers/   (9: auth, cliente, espacio, evento, health, ponencia, ponente, sala, upload)
-    ├── middlewares/   (7: authenticate, authorize, errorHandler, notFound, upload, validateInputs, index)
-    ├── routes/        (9 routers: auth, cliente, espacio, evento, health, ponencia, ponente, sala, upload)
-    └── validations/   (10: auth, cliente, espacio, evento, ponencia, ponente, sala, upload, user, validationChains)
+    ├── config/          (env, cloudinary, upload, firebaseServiceAccount)
+    ├── controllers/     (9: auth, cliente, espacio, evento, health, ponencia, ponente, sala, upload)
+    ├── generated/
+    │   └── prisma/      (cliente generado Prisma)
+    ├── lib/             (prisma, prismaErrors)
+    ├── middlewares/     (7 archivos: 5 barrel + upload.middleware.js con 6 helpers)
+    ├── models/          (10 .prisma: clientes, config, espacios, estados, eventos,
+    │                     ponencias, ponentes, presupuestos, salas, usuarios)
+    ├── routes/          (9 routers: auth, cliente, espacio, evento, health,
+    │                     ponencia, ponente, sala, upload)
+    ├── services/        (cliente, evento)
+    ├── utils/           (seed.js)
+    └── validations/     (10: auth, cliente, espacio, evento, ponencia, ponente,
+                          sala, upload, user, validationChains)
 ```
 
 ### Estructura de respuesta API
@@ -123,39 +137,69 @@ Lee `req.cookies.token`, `jwt.verify`, adjunta `req.user`. 401 si falta/inválid
 ### Health
 | GET | `/api/v1/health` | - |
 
-### Upload (admin)
-| Método | Endpoint | Descripción |
+### Upload (admin) — todos con `?ponente_id=`
+| Método | Endpoint | Query Params |
 |--------|----------|-------------|
-| POST | `/api/v1/upload/ponente/imagen` | Imagen perfil (ponente_id) |
-| POST | `/api/v1/upload/ponente/cv` | CV (ponente_id) |
-| POST | `/api/v1/upload/ponente/presentacion` | Presentación versionada (evento_id, ponente_id) |
-| POST | `/api/v1/upload/ponente/billete` | Billete ida/vuelta (ponente_id, tipo) |
-| POST | `/api/v1/upload/documento` | Documento genérico |
+| POST | `/api/v1/upload/ponente/imagen` | `?ponente_id=` |
+| POST | `/api/v1/upload/ponente/cv` | `?ponente_id=` |
+| POST | `/api/v1/upload/ponente/presentacion` | `?evento_id=&ponente_id=` (versionado) |
+| POST | `/api/v1/upload/ponente/billete` | `?ponente_id=&tipo=ida|vuelta` |
+| POST | `/api/v1/upload/documento` | — |
 
 ### Eventos (admin)
-| GET / POST | `/api/v1/eventos` |
-| GET / PATCH / DELETE | `/api/v1/eventos/:id` |
+| Método | Endpoint | Query Params |
+|--------|----------|-------------|
+| GET | `/api/v1/eventos` | `?ciudad=&tipoEvento=` |
+| GET | `/api/v1/eventos/:id` | |
+| POST | `/api/v1/eventos` | |
+| PATCH | `/api/v1/eventos/:id` | |
+| DELETE | `/api/v1/eventos/:id` | |
 
 ### Clientes (admin)
-| GET / POST | `/api/v1/clientes` |
-| GET / PATCH / DELETE | `/api/v1/clientes/:id` |
+| Método | Endpoint | Query Params |
+|--------|----------|-------------|
+| GET | `/api/v1/clientes` | `?sector=&ciudad=` |
+| GET | `/api/v1/clientes/:id` | |
+| POST | `/api/v1/clientes` | |
+| PATCH | `/api/v1/clientes/:id` | |
+| DELETE | `/api/v1/clientes/:id` | |
 
 ### Espacios (admin)
-| GET / POST | `/api/v1/espacios` |
-| GET | `/api/v1/espacios/buscar?min=&max=` | Búsqueda por capacidad |
-| GET / PATCH / DELETE | `/api/v1/espacios/:id` |
+| Método | Endpoint | Query Params |
+|--------|----------|-------------|
+| GET | `/api/v1/espacios` | `?ciudad=` |
+| GET | `/api/v1/espacios/buscar` | `?min=&max=` (busca espacios + salas) |
+| GET | `/api/v1/espacios/:id` | |
+| POST | `/api/v1/espacios` | |
+| PATCH | `/api/v1/espacios/:id` | |
+| DELETE | `/api/v1/espacios/:id` | |
 
 ### Ponentes (admin)
-| GET / POST | `/api/v1/ponentes` | POST y PATCH incluyen upload de imagen |
-| GET / PATCH / DELETE | `/api/v1/ponentes/:id` |
+| Método | Endpoint | Query Params |
+|--------|----------|-------------|
+| GET | `/api/v1/ponentes` | `?sector=` |
+| GET | `/api/v1/ponentes/:id` | |
+| POST | `/api/v1/ponentes` | POST y PATCH incluyen upload de imagen |
+| PATCH | `/api/v1/ponentes/:id` | |
+| DELETE | `/api/v1/ponentes/:id` | |
 
 ### Salas (admin)
-| GET / POST | `/api/v1/salas` |
-| GET / PATCH / DELETE | `/api/v1/salas/:id` |
+| Método | Endpoint | Query Params |
+|--------|----------|-------------|
+| GET | `/api/v1/salas` | `?idEspacio=` |
+| GET | `/api/v1/salas/:id` | |
+| POST | `/api/v1/salas` | |
+| PATCH | `/api/v1/salas/:id` | |
+| DELETE | `/api/v1/salas/:id` | |
 
 ### Ponencias (admin)
-| GET / POST | `/api/v1/ponencias` |
-| GET / PATCH / DELETE | `/api/v1/ponencias/:id` |
+| Método | Endpoint |
+|--------|----------|
+| GET | `/api/v1/ponencias` |
+| GET | `/api/v1/ponencias/:id` |
+| POST | `/api/v1/ponencias` |
+| PATCH | `/api/v1/ponencias/:id` |
+| DELETE | `/api/v1/ponencias/:id` |
 
 ---
 
@@ -175,20 +219,22 @@ FKs: `idPresupuesto` (1:1), `idCliente`, `idEstado`, `idSala`, `idPonencia`
 FK: `idPonente` → `Ponente`. `eventos[]`
 
 ### Ponente (`ponentes`)
-`id`, `nombrePonente`, `docuIdentificacion`, `email` (unique), `sector`, `telefono`, `fotoLink`, `cvLink`, `empresa`, `cargo` → `ponencias[]`
+`id`, `nombrePonente`, `docuIdentificacion`, `email` (unique), `sector`, `telefono`, `fotoLink`, `cvLink`, `empresa`, `cargo` → `eventosPonente` → `Ponencia[]`
 
 ### Espacio (`espacios`)
 `id`, `nombreEspacio`, `ciudad`, `direccion`, `aforo`, `nota`, `telefonoContacto`, `nombreContacto`, `emailContacto`
-FK: `salaId` → `Sala`
+`salas Sala[]` (one-to-many: un espacio puede tener muchas salas)
 
 ### Sala (`salas`)
-`id`, `nombreSala`, `tipoSala`, `capacidadMaxSala`, `notaSala` → `eventos[]`, `espacios[]`
+`id`, `nombreSala`, `tipoSala`, `capacidadMaxSala`, `notaSala` → `eventos[]`
+FK: `idEspacio` → `Espacio` (many-to-one: una sala pertenece a un espacio)
 
 ### Estado (`estados`)
 `id`, `descripcion` → `eventos[]`
 
 ### Presupuesto (`presupuestos`)
-Campos booleanos + precios para ubicación, catering, audiovisuales, otros. `evento Evento?` (1:1)
+`id`, `estadoPresupuesto`, `total`, `fecha`, `notaUbicacion`, `precioUbicacion`, `catering`, `notaCatering`, `precioCatering`, `audiovisuales`, `notaAudiovisuales`, `precioAudiovisuales`, `otros`, `notaOtros`, `precioOtros`, `observaciones`
+1:1 con `Evento` (campo `presupuesto` en Evento, `idPresupuesto` opcional)
 
 ### Usuario (`usuarios`)
 `id`, `nombreUsuario`, `rol`
@@ -210,14 +256,19 @@ Campos booleanos + precios para ubicación, catering, audiovisuales, otros. `eve
 
 ## 10. MIDDLEWARES
 
-| Middleware | Función |
-|---|---|
-| `authenticate` | JWT desde cookie → `req.user` |
-| `authorize` | `authorize(...roles)` → 403 |
-| `upload` | `imagenPonente`, `cv`, `presentacion`, `billete`, `documento`, `computeVersion` |
-| `validateInputs` | `validationResult` → 400 |
-| `errorHandler` | Manejo global (MulterError, stack trace en dev) |
-| `notFound` | 404 |
+| Middleware | Archivo | Función |
+|---|---|---|
+| `authenticate` | `authenticate.middleware.js` | JWT desde cookie → `req.user` |
+| `authorize` | `authorize.middleware.js` | `authorize(...roles)` → 403 |
+| `validateInputs` | `validateInputs.middleware.js` | `validationResult` → 400 |
+| `errorHandler` | `errorHandler.middleware.js` | Manejo global (MulterError, stack trace en dev) |
+| `notFoundHandler` | `notFound.middleware.js` | 404 |
+| `imagenPonente` | `upload.middleware.js` | Multer → Cloudinary (imagen perfil) |
+| `cv` | `upload.middleware.js` | Multer → Cloudinary (CV) |
+| `presentacion` | `upload.middleware.js` | Multer → Cloudinary (presentación versionada) |
+| `billete` | `upload.middleware.js` | Multer → Cloudinary (billete ida/vuelta) |
+| `documento` | `upload.middleware.js` | Multer → Cloudinary (documento genérico) |
+| `computeVersion` | `upload.middleware.js` | Versionado de presentaciones (evento_id + ponente_id) |
 
 ---
 
