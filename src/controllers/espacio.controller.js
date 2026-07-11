@@ -4,15 +4,13 @@ import {
   createEspacio,
   updateEspacio,
   deleteEspacio,
-  buscarPorCapacidad as buscarPorCapacidadService,
+  findEspaciosByCapacidad,
 } from '../services/espacio.service.js';
 import { mapPrismaError } from '../lib/prismaErrors.js';
 
 export const getEspacios = async (req, res, next) => {
   try {
     const { ciudad } = req.query;
-    const where = {};
-    if (ciudad) where.ciudad = { contains: ciudad, mode: 'insensitive' };
 
     const espacios = await findEspacios({
       includeSalas: true,
@@ -57,11 +55,11 @@ export const deleteEspacio = async (req, res, next) => {
   } catch (err) { next(mapPrismaError(err)); }
 };
 
-export const buscarPorCapacidad = async (req, res, next) => {
+export const getEspaciosByCapacidad = async (req, res, next) => {
   try {
     const min = parseInt(req.query.min) || 0;
     const max = parseInt(req.query.max) || 999999;
-    const [espacios, salas] = await buscarPorCapacidadService(min, max);
+    const [espacios, salas] = await findEspaciosByCapacidad(min, max);
     res.json({ ok: true, data: { espacios, salas } });
   } catch (err) { next(err); }
 };

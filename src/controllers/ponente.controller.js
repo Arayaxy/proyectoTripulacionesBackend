@@ -10,8 +10,6 @@ import { mapPrismaError } from '../lib/prismaErrors.js';
 export const getPonentes = async (req, res, next) => {
   try {
     const { sector } = req.query;
-    const where = {};
-    if (sector) where.sector = { contains: sector, mode: 'insensitive' };
 
     const ponentes = await findPonentes({
       includePonencias: true,

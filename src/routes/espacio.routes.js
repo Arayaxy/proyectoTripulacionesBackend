@@ -14,7 +14,7 @@ import {
   postEspacio,
   patchEspacio,
   deleteEspacio,
-  buscarPorCapacidad,
+  getEspaciosByCapacidad,
 } from '../controllers/espacio.controller.js';
 
 export const espacioRouter = Router();
@@ -24,7 +24,7 @@ espacioRouter.use(authenticate, authorize('admin'));
 espacioRouter.get('/buscar', [
   query('min').optional().isInt({ min: 0 }),
   query('max').optional().isInt({ min: 0 }),
-], buscarPorCapacidad);
+], getEspaciosByCapacidad);
 
 espacioRouter.get('/', getEspacios);
 espacioRouter.get('/:id', espacioIdValidation, validateInputs, getEspacio);

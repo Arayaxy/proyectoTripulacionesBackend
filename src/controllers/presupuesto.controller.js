@@ -13,7 +13,10 @@ export const getPresupuestos = async (req, res, next) => {
 
     const presupuestos = await findPresupuestos({
       where: {
-        estadoPresupuesto: estadoPresupuesto !== undefined ? estadoPresupuesto === 'true' : undefined,
+        estadoPresupuesto:
+          estadoPresupuesto !== undefined
+            ? estadoPresupuesto === 'true'
+            : undefined,
       },
     });
     res.json({ ok: true, data: presupuestos, meta: { total: presupuestos.length } });

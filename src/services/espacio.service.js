@@ -26,7 +26,7 @@ export const deleteEspacio = (id) => {
   return prisma.espacio.delete({ where: { id } });
 };
 
-export const buscarPorCapacidad = (min, max) => {
+export const findEspaciosByCapacidad = (min, max) => {
   return Promise.all([
     prisma.espacio.findMany({
       where: { aforo: { gte: min, lte: max } },
