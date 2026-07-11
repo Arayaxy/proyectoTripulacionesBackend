@@ -13,7 +13,7 @@ export const getSalas = async (req, res, next) => {
 
     const salas = await findSalas({
       includeEspacio: true,
-      where: { idEspacio: idEspacio || undefined },
+      where: { idEspacio },
     });
     res.json({ ok: true, data: salas, meta: { total: salas.length } });
   } catch (err) { next(err); }

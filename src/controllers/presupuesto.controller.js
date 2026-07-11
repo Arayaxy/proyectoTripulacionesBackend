@@ -10,11 +10,11 @@ import { mapPrismaError } from '../lib/prismaErrors.js';
 export const getPresupuestos = async (req, res, next) => {
   try {
     const { estadoPresupuesto } = req.query;
-    const where = {};
-    if (estadoPresupuesto !== undefined) where.estadoPresupuesto = estadoPresupuesto === 'true';
 
     const presupuestos = await findPresupuestos({
-      where: Object.keys(where).length ? where : undefined,
+      where: {
+        estadoPresupuesto: estadoPresupuesto !== undefined ? estadoPresupuesto === 'true' : undefined,
+      },
     });
     res.json({ ok: true, data: presupuestos, meta: { total: presupuestos.length } });
   } catch (err) { next(err); }

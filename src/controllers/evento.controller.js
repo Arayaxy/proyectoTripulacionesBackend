@@ -20,7 +20,7 @@ export const getEventos = async (req, res, next) => {
       where: {
         ciudad: { contains: ciudad, mode: 'insensitive' },
         tipoEvento: { contains: tipoEvento, mode: 'insensitive' },
-        idEstado: idEstado || undefined,
+        idEstado,
       },
     });
     res.json({ ok: true, data: eventos, meta: { total: eventos.length } });

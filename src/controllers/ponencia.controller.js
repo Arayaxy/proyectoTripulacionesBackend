@@ -14,7 +14,7 @@ export const getPonencias = async (req, res, next) => {
     const ponencias = await findPonencias({
       includePonente: true,
       includeEvento: true,
-      where: { idPonente: idPonente || undefined },
+      where: { idPonente },
     });
     res.json({ ok: true, data: ponencias, meta: { total: ponencias.length } });
   } catch (err) { next(err); }
