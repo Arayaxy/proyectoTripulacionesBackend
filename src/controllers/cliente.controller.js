@@ -10,12 +10,11 @@ import { mapPrismaError } from '../lib/prismaErrors.js';
 export const getClientes = async (req, res, next) => {
   try {
     const { sector, ciudad } = req.query;
-    const where = {};
-    if (sector) where.sector = { contains: sector, mode: 'insensitive' };
-    if (ciudad) where.ciudad = { contains: ciudad, mode: 'insensitive' };
-
     const clientes = await findClientes({
-      where: Object.keys(where).length ? where : undefined,
+      where: {
+        sector: { contains: sector, mode: 'insensitive' },
+        ciudad: { contains: ciudad, mode: 'insensitive' },
+      },
     });
     res.json({ ok: true, data: clientes, meta: { total: clientes.length } });
   } catch (err) { next(err); }

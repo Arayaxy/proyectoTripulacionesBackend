@@ -10,13 +10,11 @@ import { mapPrismaError } from '../lib/prismaErrors.js';
 export const getPonencias = async (req, res, next) => {
   try {
     const { idPonente } = req.query;
-    const where = {};
-    if (idPonente) where.idPonente = idPonente;
 
     const ponencias = await findPonencias({
       includePonente: true,
       includeEvento: true,
-      where: Object.keys(where).length ? where : undefined,
+      where: { idPonente: idPonente || undefined },
     });
     res.json({ ok: true, data: ponencias, meta: { total: ponencias.length } });
   } catch (err) { next(err); }

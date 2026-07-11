@@ -15,7 +15,9 @@ export const getPonentes = async (req, res, next) => {
 
     const ponentes = await findPonentes({
       includePonencias: true,
-      where: Object.keys(where).length ? where : undefined,
+      where: {
+        sector: { contains: sector, mode: 'insensitive' },
+      },
     });
     res.json({ ok: true, data: ponentes, meta: { total: ponentes.length } });
   } catch (err) { next(err); }

@@ -10,12 +10,10 @@ import { mapPrismaError } from '../lib/prismaErrors.js';
 export const getSalas = async (req, res, next) => {
   try {
     const { idEspacio } = req.query;
-    const where = {};
-    if (idEspacio) where.idEspacio = idEspacio;
 
     const salas = await findSalas({
       includeEspacio: true,
-      where: Object.keys(where).length ? where : undefined,
+      where: { idEspacio: idEspacio || undefined },
     });
     res.json({ ok: true, data: salas, meta: { total: salas.length } });
   } catch (err) { next(err); }

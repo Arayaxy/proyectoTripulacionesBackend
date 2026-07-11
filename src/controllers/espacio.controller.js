@@ -16,7 +16,9 @@ export const getEspacios = async (req, res, next) => {
 
     const espacios = await findEspacios({
       includeSalas: true,
-      where: Object.keys(where).length ? where : undefined,
+      where: {
+        ciudad: { contains: ciudad, mode: 'insensitive' },
+      },
     });
     res.json({ ok: true, data: espacios, meta: { total: espacios.length } });
   } catch (err) { next(err); }
