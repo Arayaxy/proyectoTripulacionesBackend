@@ -10,6 +10,7 @@
     "db:deploy": "npx prisma migrate deploy",
     "db:reset": "npx prisma migrate reset",
     "db:generate": "npx prisma generate",
+    "db:seed": "npx prisma db seed",
     "seed": "node src/utils/seed.js",
     "postinstall": "prisma generate",
     "vercel-build": "prisma migrate deploy",
