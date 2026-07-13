@@ -1,6 +1,4 @@
 import { Router } from 'express';
-import { query } from 'express-validator';
-
 import { authenticate, authorize, validateInputs } from '../middlewares/index.js';
 import {
   ponenteIdValidation,

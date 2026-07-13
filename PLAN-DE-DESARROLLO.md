@@ -18,17 +18,6 @@ Para cada elemento del plan, aplicar el ciclo TDD definido en [AGENTS.md §4](./
 - [x] Actualizar `src/config/env.js` con variables Cloudinary
 - [x] Actualizar `.env.example` con `CLOUDINARY_*`
 
-### 0.2 Prisma (PENDIENTE)
-- [ ] Instalar `@prisma/client`, `@prisma/adapter-pg`, `pg`
-- [ ] Instalar `prisma` como devDependency
-- [ ] Ejecutar `npx prisma init`
-- [ ] Actualizar `.env.example` con `DATABASE_URL`
-- [ ] Agregar `DATABASE_URL` como variable requerida en `src/config/env.js`
-- [ ] Crear `src/lib/prisma.js` con `PrismaPg` + `pg.Pool`
-- [ ] Escribir modelos en `prisma/schema.prisma`
-- [ ] Ejecutar `npx prisma generate`
-- [ ] Ejecutar `npx prisma migrate dev --name init`
-
 ### 0.3 Testing
 - [ ] Configurar Supertest + framework de testing
 - [ ] Crear test de health check

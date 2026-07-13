@@ -10,6 +10,7 @@
     "db:deploy": "npx prisma migrate deploy",
     "db:reset": "npx prisma migrate reset",
     "db:generate": "npx prisma generate",
+    "db:seed": "npx prisma db seed",
     "seed": "node src/utils/seed.js",
     "postinstall": "prisma generate",
     "vercel-build": "prisma migrate deploy",
@@ -21,7 +22,6 @@
   "devEngines": {
     "packageManager": {
       "name": "npm",
-      "version": "^11.12.1",
       "onFail": "download"
     }
   },
@@ -39,16 +39,17 @@
     "multer": "^2.2.0",
     "multer-storage-cloudinary": "^4.0.0"
   },
-  "allowScripts": {
-    "@firebase/util@1.15.1": true,
-    "protobufjs@7.6.5": true,
-    "prisma@7.8.0": true,
-    "@prisma/engines@7.8.0": true,
-    "core-js@3.49.0": true
-  },
   "devDependencies": {
     "cross-env": "^10.1.0",
+    "csv-parse": "^7.0.1",
     "prisma": "^7.8.0"
+  },
+  "allowScripts": {
+    "@prisma/engines@7.8.0": true,
+    "prisma@7.8.0": true,
+    "@firebase/util@1.15.1": true,
+    "core-js@3.49.0": true,
+    "protobufjs@7.6.5": true
   },
   "overrides": {
     "jwks-rsa": {

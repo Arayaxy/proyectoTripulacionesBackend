@@ -28,7 +28,6 @@ export const errorHandler = (err, req, res, _next) => {
 
   return res.status(status).json({
     ok: false,
-    message: env.mode === 'production' ? 'Error interno del servidor' : err.message,
-    error: [{ type: 'server', title: err.message, detail: env.mode === 'development' ? err.stack : err.message }]
+    message: canExposeMessage ? 'Error interno del servidor' : err.message,
   });
 };
