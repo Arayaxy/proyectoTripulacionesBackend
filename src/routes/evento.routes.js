@@ -1,9 +1,7 @@
 import { Router } from 'express';
-
 import {
   getEventos,
   getEvento,
-  getPonentesEvento,
   postEvento,
   patchEvento,
   deleteEvento,
@@ -21,7 +19,6 @@ eventoRouter.use(authenticate, authorize('admin'));
 
 eventoRouter.get('/', getEventos);
 eventoRouter.get('/:id', eventoIdValidation, validateInputs, getEvento);
-eventoRouter.get('/:id/ponentes', eventoIdValidation, validateInputs, getPonentesEvento);
 eventoRouter.post('/', createEventoValidation, validateInputs, postEvento);
 eventoRouter.patch(
   '/:id',

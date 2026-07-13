@@ -45,28 +45,6 @@ export const getEvento = async (req, res, next) => {
   } catch (err) { next(err); }
 };
 
-export const getPonentesEvento = async (req, res, next) => {
-  try {
-    const evento = await prisma.evento.findUnique({
-      where: { id: req.params.id },
-      include: { ponencias: { include: { ponente: true } } },
-    });
-
-    if (!evento)
-      return res.status(404).json({ ok: false, message: 'Evento no encontrado', error: [{ type: 'not_found', title: 'Evento no encontrado', detail: 'No existe un evento con ese ID' }] });
-
-    // Un ponente por cada ponencia del evento, con su logística anidada.
-    const ponentes = evento.ponencias.map((ponencia) => ({
-      ...ponencia.ponente,
-      ponencia: { ...ponencia, ponente: undefined },
-    }));
-
-    res.status(200).json({ ok: true, data: ponentes });
-  } catch (error) {
-    next(error);
-  }
-};
-
 export const postEvento = async (req, res, next) => {
   try {
     const evento = await createEvento(req.body);
