@@ -2,7 +2,7 @@ model Evento {
   id              String       @id @default(uuid(7)) @db.Uuid
   nombreEvento    String       @map("nombre_evento")
   ciudad          String
-  lugarConfirmado String       @map("lugar_confirmado")
+  lugarConfirmado String?      @map("lugar_confirmado")
   fechaInicio     DateTime     @map("fecha_inicio") @db.Timestamptz(0)
   fechaFin        DateTime     @map("fecha_fin") @db.Timestamptz(0)
   numeroPersonas  Int          @map("numero_personas")
