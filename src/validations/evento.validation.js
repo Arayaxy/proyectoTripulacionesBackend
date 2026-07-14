@@ -89,7 +89,7 @@ export const createEventoValidation = checkSchema({
       errorMessage: 'El estado del evento es obligatorio',
     },
     isIn: {
-      options: [['planificado', 'reservado', 'confirmado', 'finalizado', 'cancelado']],
+      options: [['Planificado', 'Reservado', 'Confirmado', 'Finalizado', 'Cancelado']],
       errorMessage: 'El estado no es válido',
     },
   },
@@ -160,7 +160,7 @@ export const updateEventoValidation = checkSchema({
   estado: {
     optional: true,
     isIn: {
-      options: [['planificado', 'reservado', 'confirmado', 'finalizado', 'cancelado']],
+      options: [['Planificado', 'Reservado', 'Confirmado', 'Finalizado', 'Cancelado']],
       errorMessage: 'El estado no es válido',
     },
   },

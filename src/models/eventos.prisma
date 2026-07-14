@@ -1,9 +1,9 @@
 enum Estado {
-  planificado
-  reservado
-  confirmado
-  finalizado
-  cancelado
+  Planificado
+  Reservado
+  Confirmado
+  Finalizado
+  Cancelado
 
   @@map("estado")
 }

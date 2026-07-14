@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "estado" AS ENUM ('planificado', 'reservado', 'confirmado', 'finalizado', 'cancelado');
+CREATE TYPE "estado" AS ENUM ('Planificado', 'Reservado', 'Confirmado', 'Finalizado', 'Cancelado');
 
 -- CreateTable
 CREATE TABLE "clientes" (
