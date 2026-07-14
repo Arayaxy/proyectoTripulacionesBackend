@@ -13,7 +13,7 @@ model Evento {
   idCliente       String       @map("id_cliente") @db.Uuid
   cliente         Cliente      @relation(fields: [idCliente], references: [id]) // Enlace de clave foránea
   idEstado        String       @map("id_estado") @db.Uuid
-  estado          Estado       @relation(fields: [idEstado], references: [id]) // Enlace de clave foránea
+  estado          Estado?       @relation(fields: [idEstado], references: [id]) // Enlace de clave foránea
   idSala          String?      @map("id_sala") @db.Uuid
   sala            Sala?        @relation(fields: [idSala], references: [id]) // Enlace de clave foránea
   ponencias       Ponencia[]
