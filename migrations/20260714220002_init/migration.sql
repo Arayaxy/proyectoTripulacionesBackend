@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "estado" AS ENUM ('planificado', 'reservado', 'confirmado', 'finalizado', 'cancelado');
+
 -- CreateTable
 CREATE TABLE "clientes" (
     "id" UUID NOT NULL,
@@ -27,14 +30,6 @@ CREATE TABLE "espacios" (
 );
 
 -- CreateTable
-CREATE TABLE "estados" (
-    "id" UUID NOT NULL,
-    "descripcion" TEXT NOT NULL,
-
-    CONSTRAINT "estados_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "eventos" (
     "id" UUID NOT NULL,
     "nombre_evento" TEXT NOT NULL,
@@ -45,9 +40,9 @@ CREATE TABLE "eventos" (
     "numero_personas" INTEGER NOT NULL,
     "tipo_evento" TEXT NOT NULL,
     "nota" TEXT,
+    "estado" "estado" NOT NULL,
     "id_presupuesto" UUID,
     "id_cliente" UUID NOT NULL,
-    "id_estado" UUID NOT NULL,
     "id_sala" UUID,
 
     CONSTRAINT "eventos_pkey" PRIMARY KEY ("id")
@@ -147,9 +142,6 @@ ALTER TABLE "eventos" ADD CONSTRAINT "eventos_id_presupuesto_fkey" FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE "eventos" ADD CONSTRAINT "eventos_id_cliente_fkey" FOREIGN KEY ("id_cliente") REFERENCES "clientes"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "eventos" ADD CONSTRAINT "eventos_id_estado_fkey" FOREIGN KEY ("id_estado") REFERENCES "estados"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "eventos" ADD CONSTRAINT "eventos_id_sala_fkey" FOREIGN KEY ("id_sala") REFERENCES "salas"("id") ON DELETE SET NULL ON UPDATE CASCADE;
