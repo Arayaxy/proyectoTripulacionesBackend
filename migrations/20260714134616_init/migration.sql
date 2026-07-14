@@ -39,7 +39,7 @@ CREATE TABLE "eventos" (
     "id" UUID NOT NULL,
     "nombre_evento" TEXT NOT NULL,
     "ciudad" TEXT NOT NULL,
-    "lugar_confirmado" TEXT NOT NULL,
+    "lugar_confirmado" TEXT,
     "fecha_inicio" TIMESTAMPTZ(0) NOT NULL,
     "fecha_fin" TIMESTAMPTZ(0) NOT NULL,
     "numero_personas" INTEGER NOT NULL,
