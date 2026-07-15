@@ -56,7 +56,8 @@ export const getLogin = async (req, res) => {
 
     return res.status(401).json({
       ok: false,
-      message: 'El token no es valido o ha expirado'
+      // message: 'El token no es valido o ha expirado'
+      message: error.message
     });
   }
 };
