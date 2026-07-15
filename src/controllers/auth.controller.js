@@ -39,13 +39,6 @@ export const getLogin = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
-    res.cookie('is_logged_in', 'true', {
-      httpOnly: false,
-      secure: env.mode === 'production',
-      sameSite: env.mode === 'production' ? 'none' : 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000
-    });
-
     return res.json({
       ok: true,
       user: userPayload
@@ -84,7 +77,6 @@ export const verifySession = async (req, res) => {
 
 export const getLogout = async (req, res) => {
   res.clearCookie('token');
-  res.clearCookie('is_logged_in');
 
   return res.json({
     ok: true,
