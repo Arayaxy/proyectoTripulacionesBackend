@@ -28,6 +28,6 @@ export const errorHandler = (err, req, res, _next) => {
 
   return res.status(status).json({
     ok: false,
-    message: canExposeMessage ? 'Error interno del servidor' : err.message,
+    message: canExposeMessage ? err.message : 'Error interno del servidor',
   });
 };
