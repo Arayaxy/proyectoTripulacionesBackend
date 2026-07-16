@@ -31,7 +31,7 @@ export const getLogin = async (req, res) => {
 
       console.log('getLogin: checking email:', email);
       const usuario = await prisma.usuario.findFirst({ where: { email } });
-      console.log('🔍 getLogin: found usuario:', usuario);
+      console.log('getLogin: found usuario:', usuario);
 
 
 
