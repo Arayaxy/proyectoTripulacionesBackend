@@ -24,7 +24,8 @@ export const getEspacios = async (req, res, next) => {
 
 export const getEspacio = async (req, res, next) => {
   try {
-    const espacio = await findEspacioById(req.params.id, { includeSalas: true });
+    const includeSalas = req.query.salas !== 'false';
+    const espacio = await findEspacioById(req.params.id, { includeSalas });
     if (!espacio) {
       const err = new Error('Espacio no encontrado');
       err.status = 404;
@@ -43,7 +44,8 @@ export const postEspacio = async (req, res, next) => {
 
 export const patchEspacio = async (req, res, next) => {
   try {
-    const espacio = await updateEspacio(req.params.id, req.body);
+    const { salas, ...espacioData } = req.body;
+    const espacio = await updateEspacio(req.params.id, espacioData);
     res.json({ ok: true, data: espacio });
   } catch (err) { next(mapPrismaError(err)); }
 };
