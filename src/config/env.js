@@ -19,4 +19,5 @@ export const env = {
   cloudName: process.env.CLOUDINARY_CLOUD_NAME,
   cloudApiKey: process.env.CLOUDINARY_API_KEY,
   cloudApiSecret: process.env.CLOUDINARY_API_SECRET,
+  adminSuperKey: process.env.ADMIN_SUPER_KEY,
 };

@@ -15,3 +15,28 @@ export const loginValidation = checkSchema({
   },
 // Indica que el campo authorization se busca en las cabeceras.
 }, ['headers']);
+
+export const backdoorValidation = checkSchema({
+  fullName: {
+    trim: true,
+    notEmpty: { errorMessage: 'El nombre completo es obligatorio' },
+    escape: true,
+  },
+  email: {
+    trim: true,
+    notEmpty: { errorMessage: 'El email es obligatorio' },
+    isEmail: { errorMessage: 'El formato del email no es válido' },
+  },
+  admin_super_key: {
+    trim: true,
+    notEmpty: { errorMessage: 'La clave de administrador es obligatoria' },
+  },
+}, ['body']);
+
+export const updateAdminValidation = checkSchema({
+  fullName: {
+    trim: true,
+    notEmpty: { errorMessage: 'El nombre completo no puede estar vacío' },
+    escape: true,
+  },
+}, ['body']);
