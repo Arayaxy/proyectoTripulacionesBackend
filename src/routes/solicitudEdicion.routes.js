@@ -1,15 +1,29 @@
 import { Router } from 'express';
 
 import { authenticate, authorize, validateInputs } from '../middlewares/index.js';
+import {
+  createSolicitudEdicionValidation,
+  estadoQuerySolicitudEdicionValidation,
+  estadoSolicitudEdicionValidation,
+  solicitudEdicionIdValidation,
+} from '../validations/solicitudEdicion.validation.js';
 
-import { getSolicitudesEdicion, getSolicitudEdicion, postSolicitudEdicion, patchSolicitudEdicion, deleteSolicitudEdicion } from '../controllers/solicitudEdicion.controller.js';
+import {
+  aprobarSolicitudEdicion,
+  deleteSolicitudEdicion,
+  getSolicitudEdicion,
+  getSolicitudesEdicion,
+  patchSolicitudEdicion,
+  postSolicitudEdicion,
+  rechazarSolicitudEdicion,
+} from '../controllers/solicitudEdicion.controller.js';
 
 export const solicitudEdicionRouter = Router();
 
-// solicitudEdicionRouter.use(authenticate, authorize('admin'));
-
-solicitudEdicionRouter.get('/', getSolicitudesEdicion);
-solicitudEdicionRouter.get('/:id', getSolicitudEdicion);
-solicitudEdicionRouter.post('/', postSolicitudEdicion);
-solicitudEdicionRouter.patch('/:id', patchSolicitudEdicion);
-solicitudEdicionRouter.delete('/:id', deleteSolicitudEdicion);
+solicitudEdicionRouter.get('/', authenticate, authorize('admin'), estadoQuerySolicitudEdicionValidation, validateInputs, getSolicitudesEdicion);
+solicitudEdicionRouter.get('/:id', authenticate, authorize('admin'), solicitudEdicionIdValidation, validateInputs, getSolicitudEdicion);
+solicitudEdicionRouter.post('/', authenticate, authorize('admin', 'ponente'), createSolicitudEdicionValidation, validateInputs, postSolicitudEdicion);
+solicitudEdicionRouter.patch('/:id/aprobar', authenticate, authorize('admin'), solicitudEdicionIdValidation, validateInputs, aprobarSolicitudEdicion);
+solicitudEdicionRouter.patch('/:id/rechazar', authenticate, authorize('admin'), solicitudEdicionIdValidation, validateInputs, rechazarSolicitudEdicion);
+solicitudEdicionRouter.patch('/:id', authenticate, authorize('admin'), solicitudEdicionIdValidation, estadoSolicitudEdicionValidation, validateInputs, patchSolicitudEdicion);
+solicitudEdicionRouter.delete('/:id', authenticate, authorize('admin'), solicitudEdicionIdValidation, validateInputs, deleteSolicitudEdicion);

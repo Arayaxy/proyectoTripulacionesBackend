@@ -3,6 +3,8 @@ import {
   findSolicitudEdicionById,
   createSolicitudEdicion,
   updateSolicitudEdicion,
+  approveSolicitudEdicion,
+  rejectSolicitudEdicion,
   removeSolicitudEdicion
 } from '../services/solicitudEdicion.service.js';
 import { mapPrismaError } from '../lib/prismaErrors.js';
@@ -40,7 +42,22 @@ export const postSolicitudEdicion = async (req, res, next) => {
 
 export const patchSolicitudEdicion = async (req, res, next) => {
   try {
-    const solicitudEdicion = await updateSolicitudEdicion(req.params.id, req.body);
+    const { estado } = req.body;
+    const solicitudEdicion = await updateSolicitudEdicion(req.params.id, { estado });
+    res.json({ ok: true, data: solicitudEdicion });
+  } catch (err) { next(mapPrismaError(err)); }
+};
+
+export const aprobarSolicitudEdicion = async (req, res, next) => {
+  try {
+    const solicitudEdicion = await approveSolicitudEdicion(req.params.id);
+    res.json({ ok: true, data: solicitudEdicion });
+  } catch (err) { next(mapPrismaError(err)); }
+};
+
+export const rechazarSolicitudEdicion = async (req, res, next) => {
+  try {
+    const solicitudEdicion = await rejectSolicitudEdicion(req.params.id);
     res.json({ ok: true, data: solicitudEdicion });
   } catch (err) { next(mapPrismaError(err)); }
 };
