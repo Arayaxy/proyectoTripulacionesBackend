@@ -21,7 +21,11 @@ export const getSalas = async (req, res, next) => {
 
 export const getSala = async (req, res, next) => {
   try {
-    const sala = await findSalaById(req.params.id, { includeEspacio: true });
+    const includeEventos = req.query.eventos !== 'false';
+    const sala = await findSalaById(req.params.id, {
+      includeEspacio: !includeEventos,
+      includeEventos,
+    });
     if (!sala) {
       const err = new Error('Sala no encontrada');
       err.status = 404;
@@ -40,7 +44,8 @@ export const postSala = async (req, res, next) => {
 
 export const patchSala = async (req, res, next) => {
   try {
-    const sala = await updateSala(req.params.id, req.body);
+    const { espacio, eventos, ...salaData } = req.body;
+    const sala = await updateSala(req.params.id, salaData);
     res.json({ ok: true, data: sala });
   } catch (err) { next(mapPrismaError(err)); }
 };
