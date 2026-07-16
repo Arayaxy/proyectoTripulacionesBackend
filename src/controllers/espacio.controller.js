@@ -24,7 +24,7 @@ export const getEspacios = async (req, res, next) => {
 
 export const getEspacio = async (req, res, next) => {
   try {
-    const includeSalas = req.query.salas !== 'false';
+    const includeSalas = req.query.withSalas !== 'false';
     const espacio = await findEspacioById(req.params.id, { includeSalas });
     if (!espacio) {
       const err = new Error('Espacio no encontrado');

@@ -21,11 +21,8 @@ export const getSalas = async (req, res, next) => {
 
 export const getSala = async (req, res, next) => {
   try {
-    const includeEventos = req.query.eventos !== 'false';
-    const sala = await findSalaById(req.params.id, {
-      includeEspacio: !includeEventos,
-      includeEventos,
-    });
+    const includeEspacio = req.query.withEspacio !== 'false';
+    const sala = await findSalaById(req.params.id, { includeEspacio });
     if (!sala) {
       const err = new Error('Sala no encontrada');
       err.status = 404;
