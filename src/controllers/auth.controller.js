@@ -7,6 +7,7 @@ export const getLogin = async (req, res) => {
 
   const authHeader = req.headers.authorization;
   const firebaseToken = authHeader?.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
+  let usuarioName = null;
 
   if (!firebaseToken) {
     return res.status(400).json({ ok: false, message: 'No Token Encontrado' });
@@ -26,14 +27,23 @@ export const getLogin = async (req, res) => {
     } else {
       //PRODUCTION MODE
       const decodedFirebaseToken = await getAuth().verifyIdToken(firebaseToken);
-      const { uid: userId, name, email: rawEmail } = decodedFirebaseToken;
+      const { email: rawEmail } = decodedFirebaseToken;
       const email = rawEmail?.toLowerCase().trim();
 
       console.log('getLogin: checking email:', email);
-      const usuario = await prisma.usuario.findFirst({ where: { email } });
+      let usuario = await prisma.usuario.findFirst({ where: { email } });
+
+      if (usuario) {
+        usuarioName = usuario.nombreUsuario;
+      }
+      else {
+        usuario = await prisma.ponente.findFirst({ where: { email } });
+        if (usuario) {
+          usuario.rol = 'ponente'
+          usuarioName = usuario.nombrePonente;
+        }
+      }
       console.log('getLogin: found usuario:', usuario);
-
-
 
       if (!usuario) {
         return res.status(403).json({
@@ -42,8 +52,7 @@ export const getLogin = async (req, res) => {
         });
       }
 
-      // userPayload = { userId, name, email, role: 'admin' };
-      userPayload = { userId, name, email, role: usuario.rol };
+      userPayload = { userId: usuario.id, name: usuarioName, email, role: usuario.rol };
     }
 
     const token = jwt.sign(userPayload, env.jwtSecret, { expiresIn: '7d' });
@@ -211,7 +220,7 @@ export const verifySession = async (req, res) => {
 
     if (!usuario) {
       res.clearCookie('token');
-      res.clearCookie('is_logged_in');
+      // res.clearCookie('is_logged_in');
       return res.status(401).json({ ok: false, message: 'Usuario no encontrado' });
     }
 

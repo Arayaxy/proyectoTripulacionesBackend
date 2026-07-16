@@ -11,5 +11,5 @@ model Ponente {
   cargo              String
   eventosPonente     Ponencia[]
 
-  @@map("ponentes")
+  @@map("ponentes") 
 }
